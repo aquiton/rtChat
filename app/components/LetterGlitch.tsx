@@ -1,7 +1,17 @@
 import { useRef, useEffect } from "react";
 
 const LetterGlitch = ({
-  glitchColors = ["#fbbe5b", "#1e9ae0", "#e1b2f0", "#f46049", "#06D6A0", "#073B4C", "#118AB2", "#FFD166", "#EF476F"],
+  glitchColors = [
+    "#fbbe5b",
+    "#1e9ae0",
+    "#e1b2f0",
+    "#f46049",
+    "#06D6A0",
+    "#073B4C",
+    "#118AB2",
+    "#FFD166",
+    "#EF476F",
+  ],
   glitchSpeed = 50,
   centerVignette = false,
   outerVignette = true,
@@ -173,9 +183,13 @@ const LetterGlitch = ({
   };
 
   const drawLetters = () => {
-    if (!context.current || letters.current.length === 0) return;
+    if (!context.current || letters.current.length === 0 || !canvasRef.current)
+      return; // ✅ Check for null
     const ctx = context.current;
-    const { width, height } = canvasRef.current!.getBoundingClientRect();
+    const rect = canvasRef.current.getBoundingClientRect();
+    if (!rect) return; // ✅ Ensure `rect` exists
+
+    const { width, height } = rect;
     ctx.clearRect(0, 0, width, height);
     ctx.font = `${fontSize}px monospace`;
     ctx.textBaseline = "top";
@@ -281,14 +295,10 @@ const LetterGlitch = ({
     <div className="relative w-full h-full bg-black overflow-hidden">
       <canvas ref={canvasRef} className="block w-full h-full" />
       {outerVignette && (
-        <div
-          className="absolute top-0 left-0 w-full h-full pointer-events-none bg-[radial-gradient(circle,_rgba(0,0,0,0)_60%,_rgba(0,0,0,1)_100%)]"
-        ></div>
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none bg-[radial-gradient(circle,_rgba(0,0,0,0)_60%,_rgba(0,0,0,1)_100%)]"></div>
       )}
       {centerVignette && (
-        <div
-          className="absolute top-0 left-0 w-full h-full pointer-events-none bg-[radial-gradient(circle,_rgba(0,0,0,0.8)_0%,_rgba(0,0,0,0)_60%)]"
-        ></div>
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none bg-[radial-gradient(circle,_rgba(0,0,0,0.8)_0%,_rgba(0,0,0,0)_60%)]"></div>
       )}
     </div>
   );
