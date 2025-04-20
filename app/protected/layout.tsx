@@ -1,8 +1,7 @@
 "use client";
 import { ReactNode, useState } from "react";
-import { useUser } from "../lib/auth";
+import { logout, useUser } from "../lib/auth";
 import { useRouter } from "next/navigation";
-import { logout } from "../lib/firebaseConfig";
 import AuthGuard from "./components/AuthGuard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 

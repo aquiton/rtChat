@@ -8,11 +8,13 @@ import { AddModal } from "./ServerModals/Add";
 interface ServerModalProps {
   showAddServer: boolean;
   setShowAddServer: React.Dispatch<SetStateAction<boolean>>;
+  refetch: () => void;
 }
 
 export const ServerModal = ({
   showAddServer,
   setShowAddServer,
+  refetch,
 }: ServerModalProps) => {
   const [modalView, setModalView] = useState("");
 
@@ -47,7 +49,12 @@ export const ServerModal = ({
           }}
         >
           {modalView === "create" && (
-            <CreateModal key="create" back={setModalView} close={handleClose} />
+            <CreateModal
+              key="create"
+              back={setModalView}
+              close={handleClose}
+              refetch={refetch}
+            />
           )}
           {modalView === "add" && <AddModal key="add" />}
           {modalView === "" && (

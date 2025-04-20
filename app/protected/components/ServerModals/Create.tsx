@@ -10,30 +10,21 @@ interface ServerData {
   roles: number[];
 }
 
-const initialServerDraft: ServerData = {
-  name: "",
-  channels: [],
-  users: [],
-  roles: [],
-};
-
 export const CreateModal = ({
   back,
   close,
+  refetch,
 }: {
   back: React.Dispatch<SetStateAction<string>>;
   close: () => void;
+  refetch: () => void;
 }) => {
-  const [serverDraft, setServerDraft] = useState(initialServerDraft);
-  const [serverName, setServerName] = useState('')
+  const [serverName, setServerName] = useState("");
   const handleCreateServer = async () => {
-    const serverid = await createServer(serverName);
-    console.log(serverid);
-    close();
-  };
-
-  const updateState = (key: string, value: string) => {
-    setServerDraft((prev) => ({ ...prev, [key]: value }));
+    console.log(serverName);
+    createServer(serverName)
+      .then(() => refetch())
+      .then(() => close());
   };
 
   return (
@@ -57,9 +48,10 @@ export const CreateModal = ({
 
       <p className="text-gray-400">SERVER NAME</p>
       <input
-        className="p-2 rounded-lg bg-slate-950 text-red-500"
+        className="p-2 rounded-lg bg-slate-950 text-red-500 focus:outline-none"
         placeholder="Server Name..."
-        onChange={(e) => updateState("name", e.currentTarget.value)}
+        onChange={(e) => setServerName(e.currentTarget.value)}
+        maxLength={20}
       />
       <div className="flex justify-between">
         <button
