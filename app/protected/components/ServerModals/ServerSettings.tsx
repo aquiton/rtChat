@@ -17,10 +17,12 @@ export const ServerSettings = ({ open, setOpen }: ServerSettingProps) => {
     console.log("setting is open");
   }
 
-  return open ? (
-    <div
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
       onClick={handleClose}
-      className="bg-blue-200 w-full absolute top-0 left-0 z-50 flex justify-center items-center"
+      className="bg-blue-200 bg-opacity-50 w-full absolute inset-0 z-50 flex justify-center items-center"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -35,8 +37,6 @@ export const ServerSettings = ({ open, setOpen }: ServerSettingProps) => {
           <Cog6ToothIcon className="size-5 rounded-full m-2" />
         </button>
       </div>
-    </div>
-  ) : (
-    "nothing"
+    </Dialog>
   );
 };
