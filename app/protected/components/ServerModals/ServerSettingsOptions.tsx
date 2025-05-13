@@ -1,6 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import { Cog6ToothIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import { SetStateAction } from "react";
 
 interface ServerSettingProps {
@@ -16,10 +17,11 @@ export const ServerSettingsOptions = ({
     console.log(close);
     setOpen(false);
   };
+  const router = useRouter();
 
-  if (open) {
-    console.log("setting is open");
-  }
+  const handleServerSettings = () => {
+    router.push("/protected/serverSettings");
+  };
 
   return (
     <Dialog
@@ -45,7 +47,10 @@ export const ServerSettingsOptions = ({
           <p>Invite People</p>
           <UserPlusIcon className="size-5 rounded-full m-2" />
         </button>
-        <button className="hover:text-orange-600 transition duration-200 rounded-lg px-4 flex items-center justify-between w-full hover:scale-105">
+        <button
+          onClick={handleServerSettings}
+          className="hover:text-orange-600 transition duration-200 rounded-lg px-4 flex items-center justify-between w-full hover:scale-105"
+        >
           <p>Server Settings</p>
           <Cog6ToothIcon className="size-5 rounded-full m-2" />
         </button>
