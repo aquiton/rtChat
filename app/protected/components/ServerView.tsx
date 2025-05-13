@@ -4,7 +4,7 @@ import { Server } from "../home/page";
 import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 import { auth } from "@/app/lib/firebaseConfig";
-import { ServerSettings } from "./ServerModals/ServerSettings";
+import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
 
 interface Message {
   from: string;
@@ -79,7 +79,7 @@ export default function ServerView({ serverData }: { serverData: Server }) {
             <button className="m-1" onClick={() => setOpenServerSettings(true)}>
               <ChevronDownIcon className="w-4 h-4" />
             </button>
-            <ServerSettings
+            <ServerSettingsOptions
               open={openServerSettings}
               setOpen={setOpenServerSettings}
             />
@@ -159,6 +159,7 @@ export default function ServerView({ serverData }: { serverData: Server }) {
           </motion.button>
         </div>
       </div>
+      
     </div>
   );
 }

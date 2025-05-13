@@ -8,7 +8,10 @@ interface ServerSettingProps {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
 }
 
-export const ServerSettings = ({ open, setOpen }: ServerSettingProps) => {
+export const ServerSettingsOptions = ({
+  open,
+  setOpen,
+}: ServerSettingProps) => {
   const handleClose = () => {
     console.log(close);
     setOpen(false);
@@ -28,12 +31,12 @@ export const ServerSettings = ({ open, setOpen }: ServerSettingProps) => {
       <motion.div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-32 left-32 flex flex-col p-2 gap-1 bg-gray-600 shadow-lg shadow-black rounded-lg text-white w-auto text-sm"
-        initial={{ opacity: 0, scaleY: 0.5 }}
-        animate={{ opacity: 1, scaleY: 1 }}
+        initial={{ scaleY: 0.5 }}
+        animate={{ scaleY: 1 }}
         transition={{
           duration: 0.1,
           type: "spring",
-          stiffness: 300,
+          stiffness: 500,
           damping: 20,
         }}
         style={{ transformOrigin: "top" }}
