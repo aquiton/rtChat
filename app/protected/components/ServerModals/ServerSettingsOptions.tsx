@@ -1,8 +1,13 @@
 import { Dialog } from "@headlessui/react";
-import { Cog6ToothIcon, UserPlusIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  Cog6ToothIcon,
+  UserPlusIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 
 interface ServerSettingProps {
   open: boolean;
@@ -13,14 +18,15 @@ export const ServerSettingsOptions = ({
   open,
   setOpen,
 }: ServerSettingProps) => {
+  const [openServerSettings, setOpenServerSettings] = useState(false);
+
   const handleClose = () => {
     console.log(close);
     setOpen(false);
   };
-  const router = useRouter();
 
   const handleServerSettings = () => {
-    router.push("/protected/serverSettings");
+    setOpenServerSettings(true);
   };
 
   return (
@@ -28,8 +34,21 @@ export const ServerSettingsOptions = ({
       open={open}
       onClose={handleClose}
       onClick={handleClose}
-      className="absolute w-auto inset-0 z-50 "
+      className="absolute w-auto inset-0 z-40 "
     >
+      <Dialog
+        open={openServerSettings}
+        onClose={handleClose}
+        className="absolute w-auto inset-0 z-50"
+      >
+        <div className="bg-red-500 w-full h-screen">
+          <XMarkIcon
+            className="size-4 stroke-2"
+            onClick={() => setOpenServerSettings(false)}
+          />
+          <p>Hello</p>
+        </div>
+      </Dialog>
       <motion.div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-32 left-32 flex flex-col p-2 gap-1 bg-gray-600 shadow-lg shadow-black rounded-lg text-white w-auto text-sm"
