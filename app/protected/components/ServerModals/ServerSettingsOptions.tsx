@@ -36,17 +36,26 @@ export const ServerSettingsOptions = ({
       onClick={handleClose}
       className="absolute w-auto inset-0 z-40 "
     >
+      {/* 
+        Server Settings modal   
+      */}
       <Dialog
         open={openServerSettings}
         onClose={handleClose}
         className="absolute w-auto inset-0 z-50"
       >
-        <div className="bg-red-500 w-full h-screen">
+        <div className="bg-red-500 w-full h-screen flex">
           <XMarkIcon
             className="size-4 stroke-2"
             onClick={() => setOpenServerSettings(false)}
           />
-          <p>Hello</p>
+          <div className="flex w-1/3 bg-blue-200">
+            <p>Options</p>
+          </div>
+          <div className="flex w-2/3 bg-green-200">
+            <div>View</div>
+            <div>Get outta here x button</div>
+          </div>
         </div>
       </Dialog>
       <motion.div
