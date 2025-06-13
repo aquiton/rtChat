@@ -109,7 +109,7 @@ export default function ServerView({ serverData }: { serverData: Server }) {
         </div>
 
         {/* Chat */}
-        <div className="flex flex-col w-full overflow-auto text-black border border-slate-600 bg-slate-800 text-white p-1">
+        <div className="flex flex-col w-full overflow-auto text-black border border-slate-600 bg-slate-800 text-white">
           <div className="border-slate-600 border-b p-4"># {channel.name}</div>
           <div
             className="flex-1 overflow-auto p-4 max-h-[calc(100vh-200px)] custom-scrollbar"
@@ -159,7 +159,6 @@ export default function ServerView({ serverData }: { serverData: Server }) {
           </motion.button>
         </div>
       </div>
-      
     </div>
   );
 }
