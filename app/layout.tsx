@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "real time chat",
 };
 
+// ROOT LAYOUT
+
 export default function RootLayout({
   children,
 }: Readonly<{

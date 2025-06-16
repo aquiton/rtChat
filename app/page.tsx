@@ -4,6 +4,9 @@ import LetterGlitch from "./components/LetterGlitch";
 import Login from "./components/Login";
 
 export default function Home() {
+
+  // ROOT PAGE
+
   const original: string[] = [
     "#fbbe5b",
     "#1e9ae0",
