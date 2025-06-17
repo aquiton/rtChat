@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -67,8 +68,9 @@ export const createServer = async (serverName: string) => {
     const serverData = {
       name: serverName,
       channels: [{ name: "general", messages: [""] }],
-      roles: [],
-      users: [{ id: currentUser.uid, name: currentUser.username }],
+      users: [
+        { id: currentUser.uid, name: currentUser.username, role: "owner" },
+      ],
     };
 
     const serverRef = await addDoc(collection(db, "servers"), serverData);
@@ -86,6 +88,24 @@ export const createServer = async (serverName: string) => {
   }
 };
 
+export const deleteServer = async (serverID: string) => {
+  try {
+    const serverdocRef = doc(db, "servers", serverID)
+    await updateDoc(serverdocRef, {
+      active: false,
+    })
+  } catch (error) {
+    console.error("Error delete server: ", error)
+  }
+}
+
+
+/* 
+  Function: getUserServers
+  Params: serverIDS => list of ids from the current user
+  Return a list of servers ids and general information to pre-populate the view
+*/
+
 export const getUserServers = async (serverIDs: string[]) => {
   try {
     const serverPromises = serverIDs.map(async (id) => {
@@ -96,7 +116,6 @@ export const getUserServers = async (serverIDs: string[]) => {
         id: snapshot?.id,
         name: data?.name,
         channels: data?.channels,
-        roles: data?.roles,
         users: data?.users,
       };
     });

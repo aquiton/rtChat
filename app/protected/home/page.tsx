@@ -19,7 +19,6 @@ export interface Server {
   id: string;
   name: string;
   channels: Channel[];
-  roles: string[];
   users: User[];
 }
 
