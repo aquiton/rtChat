@@ -1,12 +1,11 @@
 import { Dialog } from "@headlessui/react";
 import {
-  ArrowRightIcon,
   Cog6ToothIcon,
+  TrashIcon,
   UserPlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "motion/react";
-import { useRouter } from "next/navigation";
 import { SetStateAction, useState } from "react";
 
 interface ServerSettingProps {
@@ -23,6 +22,7 @@ export const ServerSettingsOptions = ({
   const handleClose = () => {
     console.log(close);
     setOpen(false);
+    setOpenServerSettings(false);
   };
 
   const handleServerSettings = () => {
@@ -45,19 +45,28 @@ export const ServerSettingsOptions = ({
         className="absolute w-auto inset-0 z-50"
       >
         <div className="bg-red-500 w-full h-screen flex">
-          <XMarkIcon
-            className="size-4 stroke-2"
-            onClick={() => setOpenServerSettings(false)}
-          />
-          <div className="flex w-1/3 bg-blue-200">
+          <div className="flex flex-col w-1/3 bg-zinc-900 text-zinc-100 items-end p-4">
+            <XMarkIcon 
+              className="size-4 stroke-2 text-zinc-100"
+              onClick={() => setOpenServerSettings(false)}
+            />
             <p>Options</p>
+            <ul>
+              <li className="font-[700] flex gap-2 text-red-500">
+                <TrashIcon className="size-5 stroke-2 text-red-500"/> 
+                <p className="font-[700] text-red-500">Delete Server</p>
+              </li>
+            </ul>
           </div>
-          <div className="flex w-2/3 bg-green-200">
+          <div className="flex w-2/3 bg-zinc-800">
             <div>View</div>
             <div>Get outta here x button</div>
           </div>
         </div>
       </Dialog>
+
+      {/* server action options  */}
+
       <motion.div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-32 left-32 flex flex-col p-2 gap-1 bg-gray-600 shadow-lg shadow-black rounded-lg text-white w-auto text-sm"

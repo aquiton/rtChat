@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -89,7 +90,10 @@ export const createServer = async (serverName: string) => {
 
 export const deleteServer = async (serverID: string) => {
   try {
-    
+    const serverdocRef = doc(db, "servers", serverID)
+    await updateDoc(serverdocRef, {
+      active: false,
+    })
   } catch (error) {
     console.error("Error delete server: ", error)
   }
