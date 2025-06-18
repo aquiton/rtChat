@@ -7,15 +7,19 @@ import {
 } from "@heroicons/react/24/outline";
 import { motion } from "motion/react";
 import { SetStateAction, useState } from "react";
+import { Server } from "../../home/page";
+import { deleteServer } from "@/app/lib/firestore";
 
 interface ServerSettingProps {
   open: boolean;
   setOpen: React.Dispatch<SetStateAction<boolean>>;
+  serverData: Server;
 }
 
 export const ServerSettingsOptions = ({
   open,
   setOpen,
+  serverData,
 }: ServerSettingProps) => {
   const [openServerSettings, setOpenServerSettings] = useState(false);
 
@@ -27,6 +31,14 @@ export const ServerSettingsOptions = ({
 
   const handleServerSettings = () => {
     setOpenServerSettings(true);
+  };
+
+  const handleDeleteServer = async () => {
+    try {
+      await deleteServer(serverData.id);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -44,17 +56,24 @@ export const ServerSettingsOptions = ({
         onClose={handleClose}
         className="absolute w-auto inset-0 z-50"
       >
-        <div className="bg-red-500 w-full h-screen flex">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-red-500 w-full h-screen flex"
+        >
           <div className="flex flex-col w-1/3 bg-zinc-900 text-zinc-100 items-end p-4">
-            <XMarkIcon 
-              className="size-4 stroke-2 text-zinc-100"
+            <button
+              className="p-2 hover:bg-zinc-100 transition duration-300 rounded-full border text-zinc-100 hover:text-black"
               onClick={() => setOpenServerSettings(false)}
-            />
+            >
+              <XMarkIcon className="size-4 stroke-2 " />
+            </button>
             <p>Options</p>
             <ul>
-              <li className="font-[700] flex gap-2 text-red-500">
-                <TrashIcon className="size-5 stroke-2 text-red-500"/> 
-                <p className="font-[700] text-red-500">Delete Server</p>
+              <li className="font-[700] text-red-500">
+                <button onClick={handleDeleteServer} className="flex gap-2">
+                  <TrashIcon className="size-5 stroke-2 text-red-500" />
+                  <p className="font-[700] text-red-500">Delete Server</p>
+                </button>
               </li>
             </ul>
           </div>

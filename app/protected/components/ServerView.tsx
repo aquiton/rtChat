@@ -82,6 +82,7 @@ export default function ServerView({ serverData }: { serverData: Server }) {
             <ServerSettingsOptions
               open={openServerSettings}
               setOpen={setOpenServerSettings}
+              serverData={serverData}
             />
           </div>
 
