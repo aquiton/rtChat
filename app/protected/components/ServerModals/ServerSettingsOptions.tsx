@@ -1,3 +1,4 @@
+import { deleteServer } from "@/app/lib/firestore";
 import { Dialog } from "@headlessui/react";
 import {
   Cog6ToothIcon,
@@ -7,26 +8,36 @@ import {
 } from "@heroicons/react/24/outline";
 import { motion } from "motion/react";
 import { SetStateAction, useState } from "react";
+import { Server } from "../../home/page";
 
 interface ServerSettingProps {
   open: boolean;
   setOpen: React.Dispatch<SetStateAction<boolean>>;
+  serverData: Server;
 }
 
 export const ServerSettingsOptions = ({
   open,
   setOpen,
+  serverData,
 }: ServerSettingProps) => {
   const [openServerSettings, setOpenServerSettings] = useState(false);
 
   const handleClose = () => {
-    console.log(close);
     setOpen(false);
     setOpenServerSettings(false);
   };
 
   const handleServerSettings = () => {
     setOpenServerSettings(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteServer(serverData.id);
+    } catch (error) {
+      console.error("Error deleting server: ", error);
+    }
   };
 
   return (
@@ -46,15 +57,17 @@ export const ServerSettingsOptions = ({
       >
         <div className="bg-red-500 w-full h-screen flex">
           <div className="flex flex-col w-1/3 bg-zinc-900 text-zinc-100 items-end p-4">
-            <XMarkIcon 
+            <XMarkIcon
               className="size-4 stroke-2 text-zinc-100"
               onClick={() => setOpenServerSettings(false)}
             />
             <p>Options</p>
             <ul>
               <li className="font-[700] flex gap-2 text-red-500">
-                <TrashIcon className="size-5 stroke-2 text-red-500"/> 
-                <p className="font-[700] text-red-500">Delete Server</p>
+                <button onClick={handleDelete} className="flex gap-1">
+                  <TrashIcon className="size-5 stroke-2 text-red-500" />
+                  <p className="font-[700] text-red-500">Delete Server</p>
+                </button>
               </li>
             </ul>
           </div>
