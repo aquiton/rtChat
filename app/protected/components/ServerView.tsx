@@ -80,6 +80,7 @@ export default function ServerView({ serverData }: { serverData: Server }) {
               <ChevronDownIcon className="w-4 h-4" />
             </button>
             <ServerSettingsOptions
+              serverData={serverData}
               open={openServerSettings}
               setOpen={setOpenServerSettings}
             />
