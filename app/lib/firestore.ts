@@ -88,17 +88,18 @@ export const createServer = async (serverName: string) => {
   }
 };
 
+// TODO: Refetch upon deleting server
+
 export const deleteServer = async (serverID: string) => {
   try {
-    const serverdocRef = doc(db, "servers", serverID)
+    const serverdocRef = doc(db, "servers", serverID);
     await updateDoc(serverdocRef, {
       active: false,
-    })
+    });
   } catch (error) {
-    console.error("Error delete server: ", error)
+    console.error("Error delete server: ", error);
   }
-}
-
+};
 
 /* 
   Function: getUserServers
@@ -113,6 +114,7 @@ export const getUserServers = async (serverIDs: string[]) => {
       const snapshot = await getDoc(ref);
       const data = snapshot.data();
       return {
+        active: data?.active,
         id: snapshot?.id,
         name: data?.name,
         channels: data?.channels,
@@ -121,7 +123,7 @@ export const getUserServers = async (serverIDs: string[]) => {
     });
 
     const results = await Promise.all(serverPromises);
-    return results.reverse();
+    return results.filter((server) => server.active == true).reverse();
   } catch (error) {
     console.error("Error fetching servers:", error);
     return [];
