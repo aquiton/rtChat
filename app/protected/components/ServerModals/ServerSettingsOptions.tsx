@@ -9,6 +9,7 @@ import {
 import { motion } from "motion/react";
 import { SetStateAction, useState } from "react";
 import { Server } from "../../home/page";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ServerSettingProps {
   open: boolean;
@@ -21,6 +22,7 @@ export const ServerSettingsOptions = ({
   setOpen,
   serverData,
 }: ServerSettingProps) => {
+  const queryClient = useQueryClient();
   const [openServerSettings, setOpenServerSettings] = useState(false);
 
   const handleClose = () => {
@@ -35,6 +37,7 @@ export const ServerSettingsOptions = ({
   const handleDelete = async () => {
     try {
       await deleteServer(serverData.id);
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     } catch (error) {
       console.error("Error deleting server: ", error);
     }

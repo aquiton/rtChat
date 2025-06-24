@@ -3,7 +3,8 @@ import { ReactNode, useState } from "react";
 import { logout, useUser } from "../lib/auth";
 import { useRouter } from "next/navigation";
 import AuthGuard from "./components/AuthGuard";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../components/QueryClient";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const user = useUser();
@@ -15,8 +16,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     router.push("/");
     setIsLoggingOut(!isLoggingOut);
   };
-
-  const [queryClient] = useState(() => new QueryClient());
 
   if (!user && !isLoggingOut) return <AuthGuard />;
 
