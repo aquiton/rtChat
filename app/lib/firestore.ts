@@ -66,6 +66,7 @@ export const createServer = async (serverName: string) => {
     }
 
     const serverData = {
+      active: true,
       name: serverName,
       channels: [{ name: "general", messages: [""] }],
       users: [
@@ -88,7 +89,7 @@ export const createServer = async (serverName: string) => {
   }
 };
 
-// TODO: Refetch upon deleting server
+//TODO Refetch upon deleting
 
 export const deleteServer = async (serverID: string) => {
   try {

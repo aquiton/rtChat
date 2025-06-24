@@ -12,7 +12,11 @@ interface Message {
   when: string;
 }
 
-export default function ServerView({ serverData }: { serverData: Server }) {
+interface ServerViewProps {
+  serverData: Server;
+}
+
+export default function ServerView({ serverData }: ServerViewProps) {
   const currentUser = auth.currentUser;
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
   const [channel, setChannel] = useState(serverData.channels[0]);
