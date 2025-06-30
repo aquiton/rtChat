@@ -60,12 +60,13 @@ export const updateUser = async (
 export const createServer = async (serverName: string) => {
   try {
     const currentUser = await getCurrentUser();
-    console.log(currentUser);
+    console.log(currentUser); // TODO: delete
     if (!currentUser || !currentUser.uid) {
       throw new Error("Current user is not authenticated");
     }
 
     const serverData = {
+      active: true,
       name: serverName,
       channels: [{ name: "general", messages: [""] }],
       users: [
@@ -88,7 +89,6 @@ export const createServer = async (serverName: string) => {
   }
 };
 
-// TODO: Refetch upon deleting server
 
 export const deleteServer = async (serverID: string) => {
   try {
