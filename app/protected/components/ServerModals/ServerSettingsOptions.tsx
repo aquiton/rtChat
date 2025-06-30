@@ -37,7 +37,9 @@ export const ServerSettingsOptions = ({
   const handleDelete = async () => {
     try {
       await deleteServer(serverData.id);
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["userServers"],
+      });
     } catch (error) {
       console.error("Error deleting server: ", error);
     }

@@ -60,7 +60,7 @@ export const updateUser = async (
 export const createServer = async (serverName: string) => {
   try {
     const currentUser = await getCurrentUser();
-    console.log(currentUser);
+    console.log(currentUser); // TODO: delete
     if (!currentUser || !currentUser.uid) {
       throw new Error("Current user is not authenticated");
     }
@@ -89,7 +89,6 @@ export const createServer = async (serverName: string) => {
   }
 };
 
-//TODO Refetch upon deleting
 
 export const deleteServer = async (serverID: string) => {
   try {

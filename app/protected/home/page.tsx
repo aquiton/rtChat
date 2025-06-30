@@ -4,7 +4,7 @@ import ServerView from "../components/ServerView";
 import { useEffect, useState } from "react";
 import { getCurrentUser, getUserServers } from "@/app/lib/firestore";
 import { useQuery } from "@tanstack/react-query";
-import { ServerModal } from "../components/ServerModal";
+import { ServerModal } from "../components/ServerModalMain";
 
 interface User {
   id: string;
@@ -28,7 +28,7 @@ export default function Home() {
 
   const userRes = useQuery({
     queryKey: ["user"],
-    queryFn: getCurrentUser, // Calls getUsers from the Firestore file
+    queryFn: () => getCurrentUser(), // Calls getUsers from the Firestore file
   });
 
   const userServers = userRes.data?.servers ?? [];
@@ -79,10 +79,10 @@ export default function Home() {
         refetch={userRes.refetch}
       />
       {/* server component */}
-      {server ? (
+      {servers.length > 0 && server ? (
         <ServerView serverData={server} />
       ) : (
-        <div className="flex bg-slate-600 w-full justify-center items-center text-slate-500 font-semibold text-lg flex gap-4 items-center justify-center">
+        <div className="flex bg-slate-600 w-full justify-center items-center text-slate-500 font-semibold text-lg gap-4">
           <ArrowLeftIcon className="w-6 h-6 stroke-2" />
           <p>Add a server to start talking!</p>
         </div>

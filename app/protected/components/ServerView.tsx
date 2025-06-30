@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Server } from "../home/page";
 import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
-import { ReactSketchCanvas } from "react-sketch-canvas";
 import { auth } from "@/app/lib/firebaseConfig";
 import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
 
@@ -30,7 +29,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
       const currentTime = new Date().toLocaleTimeString([], {
         hour: "numeric",
         minute: "2-digit",
-        hour12: true, // ensures it's in 12-hour format
+        hour12: true,
       });
       setActivity((prev) => {
         return [
