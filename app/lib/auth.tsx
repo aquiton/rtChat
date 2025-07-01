@@ -33,8 +33,12 @@ export const signUp = async (
       servers: [],
     };
     await setDoc(doc(db, "users", userCredential.user.uid), userData);
-  } catch (error: any) {
-    console.error("Sign up error:", error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Sign up error:", error.message);
+    } else {
+      console.error("Sign up error:", String(error));
+    }
   }
 };
 
@@ -47,7 +51,12 @@ export const login = async (email: string, password: string) => {
       password
     );
     return userCredential.user;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Loging error:", error.message);
+    } else {
+      console.error("Loging error:", String(error));
+    }
     return false;
   }
 };

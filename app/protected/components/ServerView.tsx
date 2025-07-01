@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { Server } from "../home/page";
+import { Server, Channel } from "../home/page";
 import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
 import { auth } from "@/app/lib/firebaseConfig";
 import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
@@ -18,10 +18,14 @@ interface ServerViewProps {
 export default function ServerView({ serverData }: ServerViewProps) {
   const currentUser = auth.currentUser;
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
-  const [channel, setChannel] = useState(serverData.channels[0]);
+  const [channel, setChannel] = useState<Channel>(serverData.channels[0]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
+
+  const handleSetChannel = (index: number) => {
+    setChannel(serverData.channels[index])
+  }
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,8 +100,10 @@ export default function ServerView({ serverData }: ServerViewProps) {
                 key={index}
                 className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:bg-slate-600 hover:text-cyan-300 transition-all duration-300"
               >
-                <HashtagIcon className="w-4 h-4" />
-                {channel.name}
+                <button onClick={() => handleSetChannel(index)}>
+                  <HashtagIcon className="w-4 h-4" />
+                  {channel.name}
+                </button>
               </p>
             ))}
             <div className="flex justify-center">
@@ -113,7 +119,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
         </div>
 
         {/* Chat */}
-        <div className="flex flex-col w-full overflow-auto text-black border border-slate-600 bg-slate-800 text-white">
+        <div className="flex flex-col w-full overflow-auto border border-slate-600 bg-slate-800 text-white">
           <div className="border-slate-600 border-b p-4"># {channel.name}</div>
           <div
             className="flex-1 overflow-auto p-4 max-h-[calc(100vh-200px)] custom-scrollbar"
@@ -135,7 +141,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
           </div>
           <form onSubmit={(e) => handleSendMessage(e)} className="w-full p-4">
             <input
-              className="w-full text-black bg-slate-500 p-2 rounded-lg focus:outline-none text-white"
+              className="w-full bg-slate-500 p-2 rounded-lg focus:outline-none text-white"
               placeholder={`Message #${channel.name}`}
               value={currentMessage}
               onChange={(e) => {

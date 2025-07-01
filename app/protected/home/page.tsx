@@ -11,7 +11,7 @@ interface User {
   name: string;
 }
 
-interface Channel {
+export interface Channel {
   messages: string[];
   name: string;
 }
