@@ -94,13 +94,15 @@ export default function ServerView({ serverData }: ServerViewProps) {
           </div>
 
           <div>
-            <div className=" mx-2 my-2">Channels</div>
+            <div className="mx-2 my-2">Channels</div>
             {serverData.channels.map((channel, index) => (
               <p
                 key={index}
                 className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:bg-slate-600 hover:text-cyan-300 transition-all duration-300"
               >
-                <button onClick={() => handleSetChannel(index)}>
+                <button
+                  className="flex items-center gap-2"
+                  onClick={() => handleSetChannel(index)}>
                   <HashtagIcon className="w-4 h-4" />
                   {channel.name}
                 </button>
