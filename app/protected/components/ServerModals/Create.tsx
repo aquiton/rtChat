@@ -21,7 +21,6 @@ export const CreateModal = ({
 }) => {
   const [serverName, setServerName] = useState("");
   const handleCreateServer = async () => {
-    console.log(serverName);
     createServer(serverName)
       .then(() => refetch())
       .then(() => close());
