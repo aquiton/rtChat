@@ -1,10 +1,15 @@
 "use client";
-import { ArrowLeftIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  Cog6ToothIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/24/outline";
 import ServerView from "../components/ServerView";
 import { useEffect, useState } from "react";
 import { getCurrentUser, getUserServers } from "@/app/lib/firestore";
 import { useQuery } from "@tanstack/react-query";
 import { ServerModal } from "../components/ServerModalMain";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: string;
@@ -25,6 +30,7 @@ export interface Server {
 export default function Home() {
   const [showAddServer, setShowAddServer] = useState(false);
   const [server, setServer] = useState<Server>();
+  const router = useRouter();
 
   const userRes = useQuery({
     queryKey: ["user"],
@@ -51,27 +57,41 @@ export default function Home() {
     }
   }, [servers]);
 
+  const handleUserSettings = () => {
+    router.push("./profile");
+  };
+
   return (
     <div className="flex w-full h-screen text-white">
       {/* server bar */}
-      <div className="flex flex-col gap-2 bg-slate-600 p-4">
-        {servers?.map((server, index) => (
-          <img
-            key={index}
-            src="https://placehold.co/600x400"
-            className="h-12 w-12 object-cover rounded-full hover:scale-110 hover:my-2 duration-300 hover:cursor-pointer"
-            onClick={() => {
-              handleServerSelect(server);
-            }}
+      <div className="flex flex-col justify-between items-center bg-slate-600 pb-6">
+        <div className="flex flex-col gap-2 overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ">
+          <div className="flex flex-col gap-2 bg-slate-600 p-1">
+            {servers?.map((server, index) => (
+              <img
+                key={index}
+                src="https://placehold.co/600x400"
+                className="h-12 w-12 object-cover rounded-full duration-300 hover:cursor-pointer"
+                onClick={() => {
+                  handleServerSelect(server);
+                }}
+              />
+            ))}
+            <PlusCircleIcon
+              className="h-12 w-12 stroke-1 bg-slate-600 text-slate-400 rounded-full hover:cursor-pointer hover:text-white transition-all duration-300 ease-in-out"
+              stroke="currentColor"
+              fill="none"
+              strokeWidth={1}
+              onClick={() => setShowAddServer(true)}
+            />
+          </div>
+        </div>
+        <div className="flex justify-center items-center p-1 bg-slate-600">
+          <Cog6ToothIcon
+            className="shrink-0 h-12 w-12 stroke-1 bg-slate-600 text-slate-400 rounded-full hover:cursor-pointer hover:text-white transition-color duration-300"
+            onClick={handleUserSettings}
           />
-        ))}
-        <PlusCircleIcon
-          className="h-12 w-12 stroke-1 bg-slate-600 text-slate-400 rounded-full hover:cursor-pointer hover:bg-teal-300 hover:text-black transition-all duration-300 ease-in-out hover:rounded-lg"
-          stroke="currentColor"
-          fill="none"
-          strokeWidth={1}
-          onClick={() => setShowAddServer(true)}
-        />
+        </div>
       </div>
       <ServerModal
         showAddServer={showAddServer}
