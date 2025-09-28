@@ -87,7 +87,7 @@ export const ServerSettingsOptions = ({
 
       <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-32 left-32 flex flex-col p-2 gap-1 bg-gray-600 shadow-lg shadow-black rounded-lg text-white w-auto text-sm"
+        className="absolute top-24 left-24 flex flex-col p-2 gap-1 bg-gray-600 shadow-lg shadow-black rounded-lg text-white w-auto text-sm"
         initial={{ scaleY: 0.5 }}
         animate={{ scaleY: 1 }}
         transition={{

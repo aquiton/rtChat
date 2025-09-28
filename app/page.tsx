@@ -21,14 +21,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen bg-black justify-center items-center text-white">
-      <LetterGlitch
-        key={String(glitchColors)}
-        glitchColors={glitchColors}
-        glitchSpeed={50}
-        centerVignette={true}
-        outerVignette={true}
-        smooth={true}
-      />
       <Login setGlitchColors={setGlitchColors} />
     </div>
   );

@@ -4,6 +4,8 @@ import { Server } from "../home/page";
 import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
 import { auth } from "@/app/lib/firebaseConfig";
 import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
+import { sendChannelMessage } from "@/app/lib/firestore";
+import { channel } from "diagnostics_channel";
 
 interface Message {
   from: string;
@@ -14,6 +16,15 @@ interface Message {
 interface ServerViewProps {
   serverData: Server;
 }
+
+const SendMessage = (
+  message: string,
+  username: string | null,
+  serverId: string,
+  channelName: string
+) => {
+  sendChannelMessage(message, username, serverId, channelName);
+};
 
 export default function ServerView({ serverData }: ServerViewProps) {
   const currentUser = auth.currentUser;
@@ -31,6 +42,13 @@ export default function ServerView({ serverData }: ServerViewProps) {
         minute: "2-digit",
         hour12: true,
       });
+      SendMessage(
+        currentMessage,
+        currentUser.displayName,
+        serverData.id,
+        serverData.channels[0].name
+      );
+
       setActivity((prev) => {
         return [
           ...prev,
@@ -57,7 +75,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
   }, [activity]);
 
   return (
-    <div className="flex flex-col bg-slate-600 w-full font-mono">
+    <div className="flex flex-col w-full font-mono">
       <div>
         <motion.div
           className=" p-2 text-center"
@@ -76,7 +94,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
 
       <div className="flex h-full mb-6">
         {/* Channels  */}
-        <div className="flex flex-col max-w-64 border border-slate-600 rounded-tl-lg bg-slate-700">
+        <div className="flex flex-col max-w-64 border border-slate-600 rounded-tl-lg ">
           <div className="relative flex items-center border-slate-600 border-b p-4 text-sm  whitespace-nowrap w-64">
             <p className="truncate">{serverData.name}</p>
             <button className="m-1" onClick={() => setOpenServerSettings(true)}>
@@ -94,7 +112,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
             {serverData.channels.map((channel, index) => (
               <p
                 key={index}
-                className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:bg-slate-600 hover:text-cyan-300 transition-all duration-300"
+                className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:text-cyan-300 transition-all duration-300 select-none"
               >
                 <HashtagIcon className="w-4 h-4" />
                 {channel.name}
@@ -102,7 +120,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
             ))}
             <div className="flex justify-center">
               <motion.button
-                className="bg-orange-300 text-slate-600 shadow-md shadow-black rounded-lg p-2 m-4 text-sm whitespace-nowrap font-semibold select-none"
+                className="text-slate-600 shadow-md shadow-black rounded-lg p-2 m-4 text-sm whitespace-nowrap font-semibold select-none hover:text-orange-500"
                 whileTap={{ scale: 0.8 }}
                 whileHover={{ scale: 1.1 }}
               >
@@ -113,8 +131,8 @@ export default function ServerView({ serverData }: ServerViewProps) {
         </div>
 
         {/* Chat */}
-        <div className="flex flex-col w-full overflow-auto text-black border border-slate-600 bg-slate-800 text-white">
-          <div className="border-slate-600 border-b p-4"># {channel.name}</div>
+        <div className="flex flex-col w-full overflow-auto text-black text-white">
+          <div className="p-4"># {channel.name}</div>
           <div
             className="flex-1 overflow-auto p-4 max-h-[calc(100vh-200px)] custom-scrollbar"
             ref={chatBoxRef}
@@ -135,7 +153,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
           </div>
           <form onSubmit={(e) => handleSendMessage(e)} className="w-full p-4">
             <input
-              className="w-full text-black bg-slate-500 p-2 rounded-lg focus:outline-none text-white"
+              className="w-full text-black bg-black p-2 rounded-lg border border-white/50 focus:outline-none text-white"
               placeholder={`Message #${channel.name}`}
               value={currentMessage}
               onChange={(e) => {
@@ -146,11 +164,11 @@ export default function ServerView({ serverData }: ServerViewProps) {
         </div>
 
         {/* User */}
-        <div className="flex flex-col w-40 p-4 items-center text-center bg-slate-700">
+        <div className="flex flex-col w-40 p-4 items-center text-center border border-green-500/50 rounded-lg">
           <p className="font-semibold font-mono text-sm text-green-500 shadow-xl shadow-green-500/50 hover:shadow-none hover:text-slate-500 hover:border-slate-500 border-b border-green-500">
             ONLINE
           </p>
-          <p className="truncate w-32 text-sm py-2 text-green-400">
+          <p className="truncate w-32 text-sm py-2 text-white">
             {serverData.users[0].name}
           </p>
           <motion.button
