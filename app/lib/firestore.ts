@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  serverTimestamp,
   updateDoc,
 } from "@firebase/firestore";
 import { auth, db } from "./firebaseConfig";
@@ -125,5 +126,43 @@ export const getUserServers = async (serverIDs: string[]) => {
   } catch (error) {
     console.error("Error fetching servers:", error);
     return [];
+  }
+};
+
+export const sendChannelMessage = async (
+  message: string,
+  username: string | null,
+  serverId: string,
+  channelName: string
+) => {
+  try {
+    const messageData = {
+      message,
+      username,
+      createdAt: new Date().toISOString(),
+    };
+
+    const serverRef = doc(db, "servers", serverId);
+    const snap = await getDoc(serverRef);
+
+    if (!snap.exists()) return;
+
+    const serverData = snap.data();
+    const channels = serverData.channels;
+
+    const channelIndex = channels.findIndex(
+      (c: { name: string }) => c.name == channelName
+    );
+    if (channelIndex === -1) return;
+
+    // Append the new message
+    channels[channelIndex] = {
+      ...channels[channelIndex],
+      messages: [...channels[channelIndex].messages, messageData],
+    };
+
+    await updateDoc(serverRef, { channels });
+  } catch (error) {
+    console.error("Error sending message", error);
   }
 };

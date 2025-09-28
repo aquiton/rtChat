@@ -10,6 +10,7 @@ import { getCurrentUser, getUserServers } from "@/app/lib/firestore";
 import { useQuery } from "@tanstack/react-query";
 import { ServerModal } from "../components/ServerModalMain";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 
 interface User {
   id: string;
@@ -62,11 +63,17 @@ export default function Home() {
   };
 
   return (
-    <div className="flex w-full h-screen text-white">
+    <motion.div
+      className="flex w-full h-screen text-white"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.2 }}
+    >
       {/* server bar */}
-      <div className="flex flex-col justify-between items-center bg-slate-600 pb-6">
+      <div className="flex flex-col justify-between items-center pb-6">
         <div className="flex flex-col gap-2 overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ">
-          <div className="flex flex-col gap-2 bg-slate-600 p-1">
+          <div className="flex flex-col gap-2 p-1">
             {servers?.map((server, index) => (
               <img
                 key={index}
@@ -78,7 +85,7 @@ export default function Home() {
               />
             ))}
             <PlusCircleIcon
-              className="h-12 w-12 stroke-1 bg-slate-600 text-slate-400 rounded-full hover:cursor-pointer hover:text-white transition-all duration-300 ease-in-out"
+              className="h-12 w-12 stroke-1 text-slate-400 rounded-full hover:cursor-pointer hover:text-white transition-all duration-300 ease-in-out"
               stroke="currentColor"
               fill="none"
               strokeWidth={1}
@@ -86,9 +93,9 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="flex justify-center items-center p-1 bg-slate-600">
+        <div className="flex justify-center items-center p-1">
           <Cog6ToothIcon
-            className="shrink-0 h-12 w-12 stroke-1 bg-slate-600 text-slate-400 rounded-full hover:cursor-pointer hover:text-white transition-color duration-300"
+            className="shrink-0 h-12 w-12 stroke-1 text-slate-400 rounded-full hover:cursor-pointer hover:text-white transition-color duration-300"
             onClick={handleUserSettings}
           />
         </div>
@@ -102,11 +109,11 @@ export default function Home() {
       {servers.length > 0 && server ? (
         <ServerView serverData={server} />
       ) : (
-        <div className="flex bg-slate-600 w-full justify-center items-center text-slate-500 font-semibold text-lg gap-4">
+        <div className="flex w-full justify-center items-center text-slate-500 font-semibold text-lg gap-4">
           <ArrowLeftIcon className="w-6 h-6 stroke-2" />
           <p>Add a server to start talking!</p>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
