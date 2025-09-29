@@ -42,6 +42,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
         minute: "2-digit",
         hour12: true,
       });
+
       SendMessage(
         currentMessage,
         currentUser.displayName,
