@@ -80,13 +80,10 @@ export default function ServerView({ serverData }: ServerViewProps) {
       <div>
         <motion.div
           className=" p-2 text-center"
-          initial={{ opacity: 0, x: -25 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{
             duration: 0.4,
-            type: "spring",
-            stiffness: 200,
-            damping: 5,
           }}
         >
           {serverData.name}
@@ -96,7 +93,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
       <div className="flex h-full mb-6">
         {/* Channels  */}
         <div className="flex flex-col max-w-64 border border-slate-600 rounded-tl-lg ">
-          <div className="relative flex items-center border-slate-600 border-b p-4 text-sm  whitespace-nowrap w-64">
+          <div className="relative flex items-center border-slate-600 border-b p-4 text-sm  whitespace-nowrap w-60">
             <p className="truncate">{serverData.name}</p>
             <button className="m-1" onClick={() => setOpenServerSettings(true)}>
               <ChevronDownIcon className="w-4 h-4" />
@@ -173,7 +170,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
             {serverData.users[0].name}
           </p>
           <motion.button
-            className="bg-green-500 rounded-lg shadow-md shadow-black p-2 text-sm font-semibold text-slate-600 select-none"
+            className=" p-2 text-sm font-semibold text-white/50 select-none hover:text-green-500"
             whileTap={{ scale: 0.8 }}
             whileHover={{ scale: 1.1 }}
             onClick={handleInviteUser}

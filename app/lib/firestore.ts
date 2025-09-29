@@ -1,11 +1,9 @@
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
-  serverTimestamp,
   updateDoc,
 } from "@firebase/firestore";
 import { auth, db } from "./firebaseConfig";
@@ -64,6 +62,9 @@ export const createServer = async (serverName: string) => {
     if (!currentUser || !currentUser.uid) {
       throw new Error("Current user is not authenticated");
     }
+
+    // TODO: create a doc in a collection of channels
+    // TODO: get channel doc id and put it in channels serverdata array
 
     const serverData = {
       active: true,
