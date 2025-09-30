@@ -4,11 +4,10 @@ import { Server } from "../home/page";
 import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
 import { auth } from "@/app/lib/firebaseConfig";
 import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
-import { sendChannelMessage } from "@/app/lib/firestore";
-import { channel } from "diagnostics_channel";
+import { getChannelMessages, sendChannelMessage } from "@/app/lib/firestore";
 
 interface Message {
-  from: string;
+  username: string;
   message: string;
   when: string;
 }
@@ -26,6 +25,11 @@ const SendMessage = (
   sendChannelMessage(message, username, serverId, channelName);
 };
 
+// const getChannel = (serverId: string, channelId: string) => {
+//   const messages = getChannelMessages(serverId, channelId)
+//   console.log(messages)
+// }
+
 export default function ServerView({ serverData }: ServerViewProps) {
   const currentUser = auth.currentUser;
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
@@ -33,6 +37,9 @@ export default function ServerView({ serverData }: ServerViewProps) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
+
+  // getChannel(serverData.id,)
+  console.log(serverData);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +61,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
         return [
           ...prev,
           {
-            from: currentUser.displayName!,
+            username: currentUser.displayName!,
             message: currentMessage,
             when: currentTime,
           },
@@ -113,7 +120,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
                 className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:text-cyan-300 transition-all duration-300 select-none"
               >
                 <HashtagIcon className="w-4 h-4" />
-                {channel.name}
+                {/* {channel.name} */}
               </p>
             ))}
             <div className="flex justify-center">
@@ -130,7 +137,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
 
         {/* Chat */}
         <div className="flex flex-col w-full overflow-auto text-black text-white">
-          <div className="p-4"># {channel.name}</div>
+          {/* <div className="p-4"># {channel.name}</div> */}
           <div
             className="flex-1 overflow-auto p-4 max-h-[calc(100vh-200px)] custom-scrollbar"
             ref={chatBoxRef}
@@ -139,7 +146,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
               <div key={index} className="py-2">
                 <div>
                   <div className="flex gap-2 items-center">
-                    <div className="font-semibold">{activity.from}</div>
+                    <div className="font-semibold">{activity.username}</div>
                     <div className="text-xs text-slate-500">
                       {activity.when}
                     </div>
@@ -152,7 +159,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
           <form onSubmit={(e) => handleSendMessage(e)} className="w-full p-4">
             <input
               className="w-full text-black bg-black p-2 rounded-lg border border-white/50 focus:outline-none text-white"
-              placeholder={`Message #${channel.name}`}
+              // placeholder={`Message #${channel.name}`}
               value={currentMessage}
               onChange={(e) => {
                 setCurrentMessage(e.currentTarget.value);

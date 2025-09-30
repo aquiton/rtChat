@@ -4,6 +4,8 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
+  query,
   updateDoc,
 } from "@firebase/firestore";
 import { auth, db } from "./firebaseConfig";
@@ -63,19 +65,43 @@ export const createServer = async (serverName: string) => {
       throw new Error("Current user is not authenticated");
     }
 
-    // TODO: create a doc in a collection of channels
-    // TODO: get channel doc id and put it in channels serverdata array
-
     const serverData = {
       active: true,
       name: serverName,
-      channels: [{ name: "general", messages: [""] }],
+      channels: [],
       users: [
         { id: currentUser.uid, name: currentUser.username, role: "owner" },
       ],
     };
 
     const serverRef = await addDoc(collection(db, "servers"), serverData);
+
+    const channelData = {
+      name: "general",
+      serverId: serverRef.id,
+    };
+
+    const channelRef = await addDoc(
+      collection(db, "servers", serverRef.id, "channels"),
+      channelData
+    );
+
+    const messageCollectionRef = collection(
+      db,
+      "servers",
+      serverRef.id,
+      "channels",
+      channelRef.id,
+      "messages"
+    );
+
+    const baseMessageData = {
+      message: "Welcome to the channel!",
+      username: "RTCHAT",
+      createdTime: new Date().toISOString(),
+    };
+
+    await addDoc(messageCollectionRef, baseMessageData);
 
     updateUser(currentUser.uid, {
       servers: currentUser.servers
@@ -128,6 +154,23 @@ export const getUserServers = async (serverIDs: string[]) => {
     console.error("Error fetching servers:", error);
     return [];
   }
+};
+
+export const getChannelMessages = async (
+  serverId: string,
+  channelId: string
+) => {
+  const messageQuery = query(
+    collection(db, "servers", serverId, "channels", channelId, "messages")
+    // orderBy("created")
+  );
+
+  const messageSnapshot = await getDocs(messageQuery);
+  const messages = messageSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+  }));
+
+  return messages;
 };
 
 export const sendChannelMessage = async (
