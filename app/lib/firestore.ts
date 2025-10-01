@@ -4,9 +4,13 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
+  query,
   updateDoc,
 } from "@firebase/firestore";
 import { auth, db } from "./firebaseConfig";
+
+import { Server } from "../protected/home/page";
 
 // Methods to access Firestore Database
 
@@ -63,19 +67,57 @@ export const createServer = async (serverName: string) => {
       throw new Error("Current user is not authenticated");
     }
 
-    // TODO: create a doc in a collection of channels
-    // TODO: get channel doc id and put it in channels serverdata array
+    //Create server data
 
     const serverData = {
       active: true,
       name: serverName,
-      channels: [{ name: "general", messages: [""] }],
+      channels: [],
       users: [
         { id: currentUser.uid, name: currentUser.username, role: "owner" },
       ],
     };
 
+    //Create server doc in server collection
+
     const serverRef = await addDoc(collection(db, "servers"), serverData);
+
+    //Create channel data
+
+    const channelData = {
+      name: "general",
+      serverId: serverRef.id,
+    };
+
+    //Create channel doc in server
+
+    const channelRef = await addDoc(
+      collection(db, "servers", serverRef.id, "channels"),
+      channelData
+    );
+
+    //Create message collection
+
+    const messageCollectionRef = collection(
+      db,
+      "servers",
+      serverRef.id,
+      "channels",
+      channelRef.id,
+      "messages"
+    );
+
+    //Create inital message for channel
+
+    const baseMessageData = {
+      message: "Welcome to the channel!",
+      username: "RTCHAT",
+      createdTime: new Date().toISOString(),
+    };
+
+    //Add doc to message
+
+    await addDoc(messageCollectionRef, baseMessageData);
 
     updateUser(currentUser.uid, {
       servers: currentUser.servers
@@ -110,15 +152,22 @@ export const deleteServer = async (serverID: string) => {
 export const getUserServers = async (serverIDs: string[]) => {
   try {
     const serverPromises = serverIDs.map(async (id) => {
-      const ref = doc(db, "servers", id);
-      const snapshot = await getDoc(ref);
+      const serverRef = doc(db, "servers", id);
+      const channelQuery = query(collection(db, "servers", id, "channels"));
+      const channelSnapShot = await getDocs(channelQuery);
+      const snapshot = await getDoc(serverRef);
       const data = snapshot.data();
       return {
-        active: data?.active,
-        id: snapshot?.id,
-        name: data?.name,
-        channels: data?.channels,
-        users: data?.users,
+        active: data?.active ?? false,
+        id: snapshot?.id ?? "",
+        channels:
+          channelSnapShot?.docs.map((doc) => ({
+            name: doc.data().name,
+            serverId: doc.data().serverId,
+            id: doc.id,
+          })) ?? [],
+        name: data?.name ?? "",
+        users: data?.users ?? [],
       };
     });
 
@@ -128,6 +177,23 @@ export const getUserServers = async (serverIDs: string[]) => {
     console.error("Error fetching servers:", error);
     return [];
   }
+};
+
+export const getChannelMessages = async (
+  serverId: string,
+  channelId: string
+) => {
+  const messageQuery = query(
+    collection(db, "servers", serverId, "channels", channelId, "messages")
+    // orderBy("created")
+  );
+
+  const messageSnapshot = await getDocs(messageQuery);
+  const messages = messageSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+  }));
+
+  return messages;
 };
 
 export const sendChannelMessage = async (
