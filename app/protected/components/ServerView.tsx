@@ -39,7 +39,6 @@ export default function ServerView({ serverData }: ServerViewProps) {
   const [openServerSettings, setOpenServerSettings] = useState(false);
 
   // getChannel(serverData.id,)
-  console.log(serverData);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,7 +119,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
                 className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:text-cyan-300 transition-all duration-300 select-none"
               >
                 <HashtagIcon className="w-4 h-4" />
-                {/* {channel.name} */}
+                {channel.name}
               </p>
             ))}
             <div className="flex justify-center">

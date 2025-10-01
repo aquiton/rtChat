@@ -10,6 +10,8 @@ import {
 } from "@firebase/firestore";
 import { auth, db } from "./firebaseConfig";
 
+import { Server } from "../protected/home/page";
+
 // Methods to access Firestore Database
 
 export const getCurrentUser = async () => {
@@ -65,6 +67,8 @@ export const createServer = async (serverName: string) => {
       throw new Error("Current user is not authenticated");
     }
 
+    //Create server data
+
     const serverData = {
       active: true,
       name: serverName,
@@ -74,17 +78,25 @@ export const createServer = async (serverName: string) => {
       ],
     };
 
+    //Create server doc in server collection
+
     const serverRef = await addDoc(collection(db, "servers"), serverData);
+
+    //Create channel data
 
     const channelData = {
       name: "general",
       serverId: serverRef.id,
     };
 
+    //Create channel doc in server
+
     const channelRef = await addDoc(
       collection(db, "servers", serverRef.id, "channels"),
       channelData
     );
+
+    //Create message collection
 
     const messageCollectionRef = collection(
       db,
@@ -95,11 +107,15 @@ export const createServer = async (serverName: string) => {
       "messages"
     );
 
+    //Create inital message for channel
+
     const baseMessageData = {
       message: "Welcome to the channel!",
       username: "RTCHAT",
       createdTime: new Date().toISOString(),
     };
+
+    //Add doc to message
 
     await addDoc(messageCollectionRef, baseMessageData);
 
@@ -136,15 +152,22 @@ export const deleteServer = async (serverID: string) => {
 export const getUserServers = async (serverIDs: string[]) => {
   try {
     const serverPromises = serverIDs.map(async (id) => {
-      const ref = doc(db, "servers", id);
-      const snapshot = await getDoc(ref);
+      const serverRef = doc(db, "servers", id);
+      const channelQuery = query(collection(db, "servers", id, "channels"));
+      const channelSnapShot = await getDocs(channelQuery);
+      const snapshot = await getDoc(serverRef);
       const data = snapshot.data();
       return {
-        active: data?.active,
-        id: snapshot?.id,
-        name: data?.name,
-        channels: data?.channels,
-        users: data?.users,
+        active: data?.active ?? false,
+        id: snapshot?.id ?? "",
+        channels:
+          channelSnapShot?.docs.map((doc) => ({
+            name: doc.data().name,
+            serverId: doc.data().serverId,
+            id: doc.id,
+          })) ?? [],
+        name: data?.name ?? "",
+        users: data?.users ?? [],
       };
     });
 

@@ -14,14 +14,17 @@ import { motion } from "motion/react";
 
 interface User {
   id: string;
+  role: string;
   name: string;
 }
 
 interface Channel {
-  messages: string[];
   name: string;
+  serverId: string;
+  id: string;
 }
 export interface Server {
+  active: boolean;
   id: string;
   name: string;
   channels: Channel[];
