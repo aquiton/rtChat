@@ -12,6 +12,8 @@ import { auth, db } from "./firebaseConfig";
 
 import { Server } from "../protected/home/page";
 
+// test gh dash
+
 // Methods to access Firestore Database
 
 export const getCurrentUser = async () => {
