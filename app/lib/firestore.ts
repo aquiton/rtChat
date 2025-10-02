@@ -192,12 +192,17 @@ export const getChannelMessages = async (
 
   const messageSnapshot = await getDocs(messageQuery);
   const messages = messageSnapshot.docs.map((doc) => ({
-    ...doc.data(),
+    username: doc.data().username,
+    message: doc.data().message,
+    createdTime: doc.data().createdTime
   }));
 
   return messages;
 };
 
+
+
+//TODO: fix this so that it creates a doc
 export const sendChannelMessage = async (
   message: string,
   username: string | null,
