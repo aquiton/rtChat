@@ -5,11 +5,12 @@ import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
 import { auth } from "@/app/lib/firebaseConfig";
 import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
 import { getChannelMessages, sendChannelMessage } from "@/app/lib/firestore";
+import { Z_VERSION_ERROR } from "node:zlib";
 
 interface Message {
   username: string;
   message: string;
-  when: string;
+  createdTime: string;
 }
 
 interface ServerViewProps {
@@ -25,10 +26,10 @@ const SendMessage = (
   sendChannelMessage(message, username, serverId, channelName);
 };
 
-// const getChannel = (serverId: string, channelId: string) => {
-//   const messages = getChannelMessages(serverId, channelId)
-//   console.log(messages)
-// }
+ const getChannel = async (serverId: string, channelId: string) => {
+   const messages = await getChannelMessages(serverId, channelId)
+   return messages;
+ }
 
 export default function ServerView({ serverData }: ServerViewProps) {
   const currentUser = auth.currentUser;
@@ -38,7 +39,13 @@ export default function ServerView({ serverData }: ServerViewProps) {
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
 
-  // getChannel(serverData.id,)
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const messages = await getChannel(serverData.id, channel.id);
+      setActivity(messages ?? []);
+    };
+    fetchMessages();
+  }, [serverData.id, channel.id, currentMessage]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +69,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
           {
             username: currentUser.displayName!,
             message: currentMessage,
-            when: currentTime,
+            createdTime: currentTime,
           },
         ];
       });
@@ -147,7 +154,14 @@ export default function ServerView({ serverData }: ServerViewProps) {
                   <div className="flex gap-2 items-center">
                     <div className="font-semibold">{activity.username}</div>
                     <div className="text-xs text-slate-500">
-                      {activity.when}
+                      {new Date(activity.createdTime).toLocaleString("en-US", {
+                        month: "numeric",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      }).replace(",",'')}
                     </div>
                   </div>
                   <div>{activity.message}</div>
@@ -158,7 +172,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
           <form onSubmit={(e) => handleSendMessage(e)} className="w-full p-4">
             <input
               className="w-full text-black bg-black p-2 rounded-lg border border-white/50 focus:outline-none text-white"
-              // placeholder={`Message #${channel.name}`}
+              placeholder={`Message #${channel.name}`}
               value={currentMessage}
               onChange={(e) => {
                 setCurrentMessage(e.currentTarget.value);
