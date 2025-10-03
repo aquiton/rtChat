@@ -4,12 +4,13 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   orderBy,
   query,
   updateDoc,
 } from "@firebase/firestore";
 import { auth, db } from "./firebaseConfig";
-
+import { Message } from "../protected/components/ServerView"
 import { Server } from "../protected/home/page";
 
 
@@ -181,62 +182,44 @@ export const getUserServers = async (serverIDs: string[]) => {
   }
 };
 
-export const getChannelMessages = async (
+export const getChannelMessages = (
   serverId: string,
-  channelId: string
+  channelId: string,
+  setActivity: React.Dispatch<React.SetStateAction<Message[]>>
 ) => {
   const messageQuery = query(
-    collection(db, "servers", serverId, "channels", channelId, "messages")
-    // orderBy("created")
+    collection(db, "servers", serverId, "channels", channelId, "messages"),
+    orderBy("createdTime")
   );
 
-  const messageSnapshot = await getDocs(messageQuery);
-  const messages = messageSnapshot.docs.map((doc) => ({
-    username: doc.data().username,
-    message: doc.data().message,
-    createdTime: doc.data().createdTime
-  }));
+  const unsubscribe = onSnapshot(messageQuery, (snapshot) => {
+    const messages = snapshot.docs.map((doc) => ({
+      username: doc.data().username,
+      message: doc.data().message,
+      createdTime: doc.data().createdTime
+    }))
+    setActivity(messages)
+  })
 
-  return messages;
+  return unsubscribe;
 };
 
-
-
-//TODO: fix this so that it creates a doc
 export const sendChannelMessage = async (
   message: string,
   username: string | null,
   serverId: string,
-  channelName: string
+  channelId: string,
 ) => {
   try {
     const messageData = {
       message,
       username,
-      createdAt: new Date().toISOString(),
+      createdTime: new Date().toISOString(),
     };
 
-    const serverRef = doc(db, "servers", serverId);
-    const snap = await getDoc(serverRef);
+    await addDoc(collection(db, "servers", serverId, "channels", channelId, "messages"), messageData);
 
-    if (!snap.exists()) return;
-
-    const serverData = snap.data();
-    const channels = serverData.channels;
-
-    const channelIndex = channels.findIndex(
-      (c: { name: string }) => c.name == channelName
-    );
-    if (channelIndex === -1) return;
-
-    // Append the new message
-    channels[channelIndex] = {
-      ...channels[channelIndex],
-      messages: [...channels[channelIndex].messages, messageData],
-    };
-
-    await updateDoc(serverRef, { channels });
-  } catch (error) {
+    } catch (error) {
     console.error("Error sending message", error);
   }
 };
