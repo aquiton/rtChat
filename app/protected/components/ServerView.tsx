@@ -5,9 +5,8 @@ import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
 import { auth } from "@/app/lib/firebaseConfig";
 import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
 import { getChannelMessages, sendChannelMessage } from "@/app/lib/firestore";
-import { Z_VERSION_ERROR } from "node:zlib";
 
-interface Message {
+export interface Message {
   username: string;
   message: string;
   createdTime: string;
@@ -21,17 +20,12 @@ const SendMessage = (
   message: string,
   username: string | null,
   serverId: string,
-  channelName: string
+  channelId: string
 ) => {
-  sendChannelMessage(message, username, serverId, channelName);
+  sendChannelMessage(message, username, serverId, channelId);
 };
 
- const getChannel = async (serverId: string, channelId: string) => {
-   const messages = await getChannelMessages(serverId, channelId)
-   return messages;
- }
-
-export default function ServerView({ serverData }: ServerViewProps) {
+ export default function ServerView({ serverData }: ServerViewProps) {
   const currentUser = auth.currentUser;
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
   const [channel, setChannel] = useState(serverData.channels[0]);
@@ -40,12 +34,16 @@ export default function ServerView({ serverData }: ServerViewProps) {
   const [openServerSettings, setOpenServerSettings] = useState(false);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const messages = await getChannel(serverData.id, channel.id);
-      setActivity(messages ?? []);
-    };
-    fetchMessages();
-  }, [serverData.id, channel.id, currentMessage]);
+
+    if (!serverData?.id || !channel?.id) return;
+    setActivity([])
+
+    setChannel(serverData.channels[0])
+    const unsubscribe = getChannelMessages(serverData.id,channel.id,setActivity);
+    return unsubscribe;
+
+   
+  }, [serverData.id, channel.id]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,21 +58,10 @@ export default function ServerView({ serverData }: ServerViewProps) {
         currentMessage,
         currentUser.displayName,
         serverData.id,
-        serverData.channels[0].name
+        serverData.channels[0].id
       );
-
-      setActivity((prev) => {
-        return [
-          ...prev,
-          {
-            username: currentUser.displayName!,
-            message: currentMessage,
-            createdTime: currentTime,
-          },
-        ];
-      });
-    }
-    setCurrentMessage("");
+      setCurrentMessage("");
+      }
   };
 
   const handleInviteUser = () => {
