@@ -4,7 +4,7 @@ import { Server } from "../home/page";
 import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
 import { auth } from "@/app/lib/firebaseConfig";
 import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
-import { getChannelMessages, sendChannelMessage } from "@/app/lib/firestore";
+import { getChannelMessages, sendChannelMessage, createServerInvite} from "@/app/lib/firestore";
 
 export interface Message {
   username: string;
@@ -48,13 +48,7 @@ const SendMessage = (
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (currentMessage != "" && currentUser) {
-      const currentTime = new Date().toLocaleTimeString([], {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      });
-
-      SendMessage(
+        SendMessage(
         currentMessage,
         currentUser.displayName,
         serverData.id,
@@ -64,9 +58,9 @@ const SendMessage = (
       }
   };
 
-  const handleInviteUser = () => {
-    // const audio = new Audio("/audio/buttonclick.mp3");
-    // audio.play();
+  const handleInviteUser = async () => {
+    const code = await createServerInvite(serverData.id)
+    console.log(code)
   };
 
   useEffect(() => {
