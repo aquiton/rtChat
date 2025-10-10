@@ -1,10 +1,15 @@
-import { motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
-import { Server } from "../home/page";
-import { ChevronDownIcon, HashtagIcon } from "@heroicons/react/24/outline";
-import { auth } from "@/app/lib/firebaseConfig";
-import { ServerSettingsOptions } from "./ServerModals/ServerSettingsOptions";
-import { getChannelMessages, sendChannelMessage, createServerInvite} from "@/app/lib/firestore";
+import { motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { Server } from '../home/page';
+import { ChevronDownIcon, HashtagIcon } from '@heroicons/react/24/outline';
+import { auth } from '@/app/lib/firebaseConfig';
+import { ServerSettingsOptions } from './ServerModals/ServerSettingsOptions';
+import {
+  getChannelMessages,
+  sendChannelMessage,
+  createServerInvite,
+} from '@/app/lib/firestore';
+import { Dialog } from '@headlessui/react';
 
 export interface Message {
   username: string;
@@ -25,42 +30,44 @@ const SendMessage = (
   sendChannelMessage(message, username, serverId, channelId);
 };
 
- export default function ServerView({ serverData }: ServerViewProps) {
+export default function ServerView({ serverData }: ServerViewProps) {
   const currentUser = auth.currentUser;
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
   const [channel, setChannel] = useState(serverData.channels[0]);
-  const [currentMessage, setCurrentMessage] = useState("");
+  const [currentMessage, setCurrentMessage] = useState('');
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
+  const [openInviteModal, setOpenInviteModal] = useState(true);
 
   useEffect(() => {
-
     if (!serverData?.id || !channel?.id) return;
-    setActivity([])
+    setActivity([]);
 
-    setChannel(serverData.channels[0])
-    const unsubscribe = getChannelMessages(serverData.id,channel.id,setActivity);
+    setChannel(serverData.channels[0]);
+    const unsubscribe = getChannelMessages(
+      serverData.id,
+      channel.id,
+      setActivity
+    );
     return unsubscribe;
-
-   
   }, [serverData.id, channel.id]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (currentMessage != "" && currentUser) {
-        SendMessage(
+    if (currentMessage != '' && currentUser) {
+      SendMessage(
         currentMessage,
         currentUser.displayName,
         serverData.id,
         serverData.channels[0].id
       );
-      setCurrentMessage("");
-      }
+      setCurrentMessage('');
+    }
   };
 
   const handleInviteUser = async () => {
-    const code = await createServerInvite(serverData.id)
-    console.log(code)
+    const code = await createServerInvite(serverData.id);
+    console.log(code);
   };
 
   useEffect(() => {
@@ -86,8 +93,8 @@ const SendMessage = (
 
       <div className="flex h-full mb-6">
         {/* Channels  */}
-        <div className="flex flex-col max-w-64 border border-slate-600 rounded-tl-lg ">
-          <div className="relative flex items-center border-slate-600 border-b p-4 text-sm  whitespace-nowrap w-60">
+        <div className="flex flex-col max-w-64 border border-white rounded-tl-lg ">
+          <div className="relative flex items-center border-b border-white border-b p-4 text-sm  whitespace-nowrap w-60">
             <p className="truncate">{serverData.name}</p>
             <button className="m-1" onClick={() => setOpenServerSettings(true)}>
               <ChevronDownIcon className="w-4 h-4" />
@@ -135,14 +142,16 @@ const SendMessage = (
                   <div className="flex gap-2 items-center">
                     <div className="font-semibold">{activity.username}</div>
                     <div className="text-xs text-slate-500">
-                      {new Date(activity.createdTime).toLocaleString("en-US", {
-                        month: "numeric",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      }).replace(",",'')}
+                      {new Date(activity.createdTime)
+                        .toLocaleString('en-US', {
+                          month: 'numeric',
+                          day: 'numeric',
+                          year: 'numeric',
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          hour12: true,
+                        })
+                        .replace(',', '')}
                     </div>
                   </div>
                   <div>{activity.message}</div>
@@ -179,6 +188,14 @@ const SendMessage = (
             Invite User
           </motion.button>
         </div>
+
+        <Dialog
+          open={openInviteModal}
+          onClose={() => setOpenInviteModal(false)}
+          className="fixed z-50 inset-0 flex justify-center items-center bg-black/50"
+        >
+          <div className="bg-gray-500 rounded-2xl text-white p-6">hi</div>
+        </Dialog>
       </div>
     </div>
   );
