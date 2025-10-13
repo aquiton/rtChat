@@ -11,10 +11,6 @@ import {
 } from "@firebase/firestore";
 import { auth, db } from "./firebaseConfig";
 import { Message } from "../protected/components/ServerView"
-import { Server } from "../protected/home/page";
-
-
-
 // Methods to access Firestore Database
 
 export const getCurrentUser = async () => {
@@ -223,3 +219,20 @@ export const sendChannelMessage = async (
     console.error("Error sending message", error);
   }
 };
+
+export const createServerInvite = async (serverId: string) => {
+  const uuid = crypto.randomUUID()
+  const cleaned_uuid = uuid.split('-')[0]
+  const invite_data = {
+    invite_code: cleaned_uuid,
+    createdTime: new Date().toISOString(),
+    days_till_expired: 1,
+  }
+
+  const serverRef = collection(db, "servers", serverId, "invite_codes")
+  
+  await addDoc(serverRef, invite_data)
+
+  return cleaned_uuid
+   
+}
