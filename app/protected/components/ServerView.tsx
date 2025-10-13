@@ -4,12 +4,8 @@ import { Server } from '../home/page';
 import { ChevronDownIcon, HashtagIcon } from '@heroicons/react/24/outline';
 import { auth } from '@/app/lib/firebaseConfig';
 import { ServerSettingsOptions } from './ServerModals/ServerSettingsOptions';
-import {
-  getChannelMessages,
-  sendChannelMessage,
-  createServerInvite,
-} from '@/app/lib/firestore';
-import { Dialog } from '@headlessui/react';
+import { getChannelMessages, sendChannelMessage } from '@/app/lib/firestore';
+import { InviteModal } from './ServerModals/InviteModal';
 
 export interface Message {
   username: string;
@@ -37,7 +33,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
   const [currentMessage, setCurrentMessage] = useState('');
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
-  const [openInviteModal, setOpenInviteModal] = useState(true);
+  const [openInviteModal, setOpenInviteModal] = useState(false);
 
   useEffect(() => {
     if (!serverData?.id || !channel?.id) return;
@@ -63,11 +59,6 @@ export default function ServerView({ serverData }: ServerViewProps) {
       );
       setCurrentMessage('');
     }
-  };
-
-  const handleInviteUser = async () => {
-    const code = await createServerInvite(serverData.id);
-    console.log(code);
   };
 
   useEffect(() => {
@@ -183,19 +174,21 @@ export default function ServerView({ serverData }: ServerViewProps) {
             className=" p-2 text-sm font-semibold text-white/50 select-none hover:text-green-500"
             whileTap={{ scale: 0.8 }}
             whileHover={{ scale: 1.1 }}
-            onClick={handleInviteUser}
+            onClick={() => setOpenInviteModal(true)}
           >
             Invite User
           </motion.button>
         </div>
 
-        <Dialog
-          open={openInviteModal}
-          onClose={() => setOpenInviteModal(false)}
-          className="fixed z-50 inset-0 flex justify-center items-center bg-black/50"
-        >
-          <div className="bg-gray-500 rounded-2xl text-white p-6">hi</div>
-        </Dialog>
+        {openInviteModal ? (
+          <InviteModal
+            open={openInviteModal}
+            setOpen={setOpenInviteModal}
+            serverId={serverData.id}
+          />
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );
