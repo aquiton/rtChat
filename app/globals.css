@@ -4,12 +4,11 @@
 
 @layer utilities {
   .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 2px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #00e5ff; /* slate-500 */
+    background-color: #dc2626; /* red-600 */
     border-radius: 9999px;
   }
 

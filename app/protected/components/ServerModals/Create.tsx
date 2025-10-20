@@ -1,14 +1,7 @@
-import { createServer } from "@/app/lib/firestore";
-import { CameraIcon } from "@heroicons/react/24/outline";
-import { motion } from "motion/react";
-import { SetStateAction, useState } from "react";
-
-interface ServerData {
-  name: string;
-  channels: number[];
-  users: number[];
-  roles: number[];
-}
+import { createServer } from '@/app/lib/firestore';
+import { CameraIcon } from '@heroicons/react/24/outline';
+import { motion } from 'motion/react';
+import { SetStateAction, useState } from 'react';
 
 export const CreateModal = ({
   back,
@@ -19,7 +12,7 @@ export const CreateModal = ({
   close: () => void;
   refetch: () => void;
 }) => {
-  const [serverName, setServerName] = useState("");
+  const [serverName, setServerName] = useState('');
   const handleCreateServer = async () => {
     createServer(serverName)
       .then(() => refetch())
@@ -56,7 +49,7 @@ export const CreateModal = ({
         <button
           className="px-2"
           onClick={() => {
-            back("");
+            back('');
           }}
         >
           back

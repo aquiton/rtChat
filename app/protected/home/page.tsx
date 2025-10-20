@@ -1,16 +1,16 @@
-"use client";
+'use client';
 import {
   ArrowLeftIcon,
   Cog6ToothIcon,
   PlusCircleIcon,
-} from "@heroicons/react/24/outline";
-import ServerView from "../components/ServerView";
-import { useEffect, useState } from "react";
-import { getCurrentUser, getUserServers } from "@/app/lib/firestore";
-import { useQuery } from "@tanstack/react-query";
-import { ServerModal } from "../components/ServerModalMain";
-import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
+} from '@heroicons/react/24/outline';
+import ServerView from '../components/ServerView';
+import { useEffect, useState } from 'react';
+import { getCurrentUser, getUserServers } from '@/app/lib/firestore';
+import { useQuery } from '@tanstack/react-query';
+import { ServerModal } from '../components/ServerModalMain';
+import { useRouter } from 'next/navigation';
+import { motion } from 'motion/react';
 
 interface User {
   id: string;
@@ -37,14 +37,14 @@ export default function Home() {
   const router = useRouter();
 
   const userRes = useQuery({
-    queryKey: ["user"],
+    queryKey: ['user'],
     queryFn: () => getCurrentUser(), // Calls getUsers from the Firestore file
   });
 
   const userServers = userRes.data?.servers ?? [];
 
   const serverRes = useQuery({
-    queryKey: ["userServers", userServers],
+    queryKey: ['userServers', userServers],
     queryFn: () => getUserServers(userServers ?? []),
     enabled: userServers.length > 0,
   });
@@ -62,7 +62,7 @@ export default function Home() {
   }, [servers]);
 
   const handleUserSettings = () => {
-    router.push("./profile");
+    router.push('./profile');
   };
 
   return (
@@ -88,7 +88,7 @@ export default function Home() {
               />
             ))}
             <PlusCircleIcon
-              className="h-12 w-12 stroke-1 text-slate-400 rounded-full hover:cursor-pointer hover:text-white transition-all duration-300 ease-in-out"
+              className="h-12 w-12 stroke-1 text-gray-100/25 rounded-full hover:cursor-pointer hover:text-red-600 transition-all duration-300 ease-in-out"
               stroke="currentColor"
               fill="none"
               strokeWidth={1}
