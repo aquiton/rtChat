@@ -1,9 +1,9 @@
-import { Dialog } from "@headlessui/react";
-import { motion, AnimatePresence } from "motion/react";
-import { SetStateAction, useState } from "react";
-import { OptionsModal } from "./ServerModals/Options";
-import { CreateModal } from "./ServerModals/Create";
-import { AddModal } from "./ServerModals/Add";
+import { Dialog } from '@headlessui/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { SetStateAction, useState } from 'react';
+import { OptionsModal } from './ServerModals/Options';
+import { CreateModal } from './ServerModals/Create';
+import { AddModal } from './ServerModals/Add';
 
 interface ServerModalProps {
   showAddServer: boolean;
@@ -16,11 +16,11 @@ export const ServerModal = ({
   setShowAddServer,
   refetch,
 }: ServerModalProps) => {
-  const [modalView, setModalView] = useState("");
+  const [modalView, setModalView] = useState('');
 
   const handleClose = () => {
     setShowAddServer(false);
-    setModalView("");
+    setModalView('');
   };
 
   return (
@@ -28,13 +28,13 @@ export const ServerModal = ({
       open={showAddServer}
       onClose={handleClose}
       onClick={handleClose}
-      className="fixed inset-0 z-50 flex justify-center items-center bg-gray-800 bg-opacity-75"
+      className="fixed inset-0 z-50 flex justify-center items-center bg-black/50"
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={modalView}
           onClick={(e) => e.stopPropagation()}
-          className="p-4 bg-gray-900 rounded-lg text-gray-700 font-semibold flex flex-col gap-4"
+          className="p-4 bg-black/75 border rounded-lg text-gray-700 font-semibold flex flex-col gap-4"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{
             opacity: 1,
@@ -43,12 +43,12 @@ export const ServerModal = ({
           exit={{ scale: 0.9 }}
           transition={{
             duration: 0.1,
-            type: "spring",
+            type: 'spring',
             stiffness: 500,
             damping: 50,
           }}
         >
-          {modalView === "create" && (
+          {modalView === 'create' && (
             <CreateModal
               key="create"
               back={setModalView}
@@ -56,8 +56,8 @@ export const ServerModal = ({
               refetch={refetch}
             />
           )}
-          {modalView === "add" && <AddModal key="add" />}
-          {modalView === "" && (
+          {modalView === 'add' && <AddModal key="add" />}
+          {modalView === '' && (
             <OptionsModal key="options" setModalView={setModalView} />
           )}
         </motion.div>
