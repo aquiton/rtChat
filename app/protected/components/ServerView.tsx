@@ -4,7 +4,11 @@ import { Server } from '../home/page';
 import { ChevronDownIcon, HashtagIcon } from '@heroicons/react/24/outline';
 import { auth } from '@/app/lib/firebaseConfig';
 import { ServerSettingsOptions } from './ServerModals/ServerSettingsOptions';
-import { getChannelMessages, sendChannelMessage } from '@/app/lib/firestore';
+import {
+  createServerInvite,
+  getChannelMessages,
+  sendChannelMessage,
+} from '@/app/lib/firestore';
 import { InviteModal } from './ServerModals/InviteModal';
 
 export interface Message {
@@ -34,6 +38,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
   const [openInviteModal, setOpenInviteModal] = useState(false);
+  const [inviteCode, setInviteCode] = useState('d');
 
   useEffect(() => {
     if (!serverData?.id || !channel?.id) return;
@@ -61,6 +66,16 @@ export default function ServerView({ serverData }: ServerViewProps) {
     }
   };
 
+  const generateCode = async () => {
+    const code = await createServerInvite(serverData.id);
+    setInviteCode(code);
+  };
+
+  const handleOpenInviteModal = () => {
+    generateCode();
+    setOpenInviteModal(true);
+  };
+
   useEffect(() => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
@@ -84,8 +99,8 @@ export default function ServerView({ serverData }: ServerViewProps) {
 
       <div className="flex h-full mb-6">
         {/* Channels  */}
-        <div className="flex flex-col max-w-64 border border-gray-100/25 rounded-tl-lg ">
-          <div className="relative flex items-center border-b border-gray-100/25 border-b p-4 text-sm  whitespace-nowrap w-60">
+        <div className="flex flex-col max-w-64 border border-gray-100/25 rounded-tl-lg rounded-bl-lg">
+          <div className="relative flex items-center border-gray-100/25 border-b p-4 text-sm  whitespace-nowrap w-60">
             <p className="truncate">{serverData.name}</p>
             <button className="m-1" onClick={() => setOpenServerSettings(true)}>
               <ChevronDownIcon className="w-4 h-4 text-red-600" />
@@ -121,8 +136,10 @@ export default function ServerView({ serverData }: ServerViewProps) {
         </div>
 
         {/* Chat */}
-        <div className="border-t border-gray-100/25 flex flex-col w-full overflow-auto text-black text-white">
-          <div className="p-4"># {channel.name}</div>
+        <div className="border-y border-gray-100/25 flex flex-col w-full overflow-auto text-black text-white">
+          <div className="p-4 border-b border-gray-100/25">
+            # {channel.name}
+          </div>
           <div
             className="flex-1 overflow-auto p-4 max-h-[calc(100vh-200px)] custom-scrollbar"
             ref={chatBoxRef}
@@ -149,7 +166,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
                         .replace(',', '')}
                     </div>
                   </div>
-                  <div>{activity.message}</div>
+                  <div className="text-sm">{activity.message}</div>
                 </div>
               </div>
             ))}
@@ -167,7 +184,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
         </div>
 
         {/* User */}
-        <div className="flex flex-col w-40 p-4 items-center text-center border border-gray-100/25 rounded-tr-lg">
+        <div className="flex flex-col w-40 p-4 items-center text-center border border-gray-100/25 rounded-tr-lg rounded-br-lg">
           <p className="font-semibold font-mono text-sm text-red-600 shadow-xl shadow-red-500/50 hover:shadow-none hover:text-slate-500 hover:border-slate-500 border-b border-red-600">
             ONLINE
           </p>
@@ -175,10 +192,10 @@ export default function ServerView({ serverData }: ServerViewProps) {
             {serverData.users[0].name}
           </p>
           <motion.button
-            className=" p-2 text-sm font-semibold text-white/50 select-none hover:text-green-500"
+            className=" p-2 text-sm font-semibold text-white/50 select-none hover:text-red-600"
             whileTap={{ scale: 0.8 }}
             whileHover={{ scale: 1.1 }}
-            onClick={() => setOpenInviteModal(true)}
+            onClick={handleOpenInviteModal}
           >
             Invite User
           </motion.button>
@@ -190,6 +207,8 @@ export default function ServerView({ serverData }: ServerViewProps) {
             setOpen={setOpenInviteModal}
             serverId={serverData.id}
             serverData={serverData}
+            inviteCode={inviteCode}
+            setInviteCode={setInviteCode}
           />
         ) : (
           ''

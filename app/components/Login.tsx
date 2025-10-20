@@ -1,26 +1,22 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import * as motion from "motion/react-client";
-import SplitText from "./SplitText";
-import { useRouter } from "next/navigation";
-import { AnimatePresence } from "motion/react";
-import { login, signUp } from "../lib/auth";
+import { useEffect, useState } from 'react';
+import * as motion from 'motion/react-client';
+import SplitText from './SplitText';
+import { useRouter } from 'next/navigation';
+import { AnimatePresence } from 'motion/react';
+import { login, signUp } from '../lib/auth';
 
-interface LoginProps {
-  setGlitchColors: Dispatch<SetStateAction<string[]>>;
-}
-
-export default function Login({ setGlitchColors }: LoginProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
-  const [username, setUserName] = useState("");
+  const [username, setUserName] = useState('');
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
     const user = await login(email, password);
     if (user) {
       setTimeout(() => {
-        router.push("protected/home");
+        router.push('protected/home');
       }, 2000);
     } else {
       //invalid login
@@ -30,9 +26,9 @@ export default function Login({ setGlitchColors }: LoginProps) {
   const handleSignUp = async (email: string, password: string) => {
     await signUp(email, password, username);
     setIsSignUp(false);
-    setEmail("");
-    setPassword("");
-    setUserName("");
+    setEmail('');
+    setPassword('');
+    setUserName('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -53,7 +49,7 @@ export default function Login({ setGlitchColors }: LoginProps) {
   return (
     <div className="fixed z-50 bg-black bg-opacity-50 border border-white/50 rounded-lg">
       <form onSubmit={handleSubmit} className="flex flex-col p-20 gap-5">
-        <SplitText text={"Welcome"} />
+        <SplitText text={'Welcome'} />
         <AnimatePresence>
           {isSignUp ? (
             <motion.input
@@ -67,13 +63,13 @@ export default function Login({ setGlitchColors }: LoginProps) {
               exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.1 } }}
               transition={{
                 duration: 0.1,
-                type: "spring",
+                type: 'spring',
                 stiffness: 300,
                 damping: 25,
               }}
             />
           ) : (
-            ""
+            ''
           )}
         </AnimatePresence>
         <input
@@ -95,7 +91,7 @@ export default function Login({ setGlitchColors }: LoginProps) {
           className="p-2 bg-white rounded text-black"
           whileTap={{ scale: 0.9 }}
         >
-          {isSignUp ? "Sign Up" : "Login"}
+          {isSignUp ? 'Sign Up' : 'Login'}
         </motion.button>
       </form>
       {isSignUp ? (
