@@ -8,18 +8,18 @@ import {
   orderBy,
   query,
   updateDoc,
-} from "@firebase/firestore";
-import { auth, db } from "./firebaseConfig";
-import { Message } from "../protected/components/ServerView"
+} from '@firebase/firestore';
+import { auth, db } from './firebaseConfig';
+import { Message } from '../protected/components/ServerView';
 // Methods to access Firestore Database
 
 export const getCurrentUser = async () => {
   try {
     const user = auth.currentUser;
     if (!user) {
-      throw new Error("error getting auth current user");
+      throw new Error('error getting auth current user');
     }
-    const userdocRef = doc(db, "users", user.uid);
+    const userdocRef = doc(db, 'users', user.uid);
     const userdata = await getDoc(userdocRef);
     const data = userdata.data();
     return {
@@ -28,22 +28,22 @@ export const getCurrentUser = async () => {
       username: data?.username,
     };
   } catch (error) {
-    console.error("Error getting current user: ", error);
+    console.error('Error getting current user: ', error);
   }
 };
 
 export const getUser = async (userID: string) => {
   try {
-    const userdocRef = doc(db, "users", userID);
+    const userdocRef = doc(db, 'users', userID);
     const querySnapshot = await getDoc(userdocRef);
     return querySnapshot.data();
   } catch (error) {
-    console.error("Error getting user: ", error);
+    console.error('Error getting user: ', error);
   }
 };
 
 export const getUsers = async () => {
-  const querySnapshot = await getDocs(collection(db, "users"));
+  const querySnapshot = await getDocs(collection(db, 'users'));
   return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };
 
@@ -52,10 +52,10 @@ export const updateUser = async (
   updatedData: { [key: string]: any }
 ) => {
   try {
-    const userDocRef = doc(db, "users", userId);
+    const userDocRef = doc(db, 'users', userId);
     await updateDoc(userDocRef, updatedData);
   } catch (error) {
-    console.error("Error updating user: ", error);
+    console.error('Error updating user: ', error);
   }
 };
 
@@ -63,7 +63,7 @@ export const createServer = async (serverName: string) => {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser || !currentUser.uid) {
-      throw new Error("Current user is not authenticated");
+      throw new Error('Current user is not authenticated');
     }
 
     //Create server data
@@ -73,25 +73,25 @@ export const createServer = async (serverName: string) => {
       name: serverName,
       channels: [],
       users: [
-        { id: currentUser.uid, name: currentUser.username, role: "owner" },
+        { id: currentUser.uid, name: currentUser.username, role: 'owner' },
       ],
     };
 
     //Create server doc in server collection
 
-    const serverRef = await addDoc(collection(db, "servers"), serverData);
+    const serverRef = await addDoc(collection(db, 'servers'), serverData);
 
     //Create channel data
 
     const channelData = {
-      name: "general",
+      name: 'general',
       serverId: serverRef.id,
     };
 
     //Create channel doc in server
 
     const channelRef = await addDoc(
-      collection(db, "servers", serverRef.id, "channels"),
+      collection(db, 'servers', serverRef.id, 'channels'),
       channelData
     );
 
@@ -99,18 +99,18 @@ export const createServer = async (serverName: string) => {
 
     const messageCollectionRef = collection(
       db,
-      "servers",
+      'servers',
       serverRef.id,
-      "channels",
+      'channels',
       channelRef.id,
-      "messages"
+      'messages'
     );
 
     //Create inital message for channel
 
     const baseMessageData = {
-      message: "Welcome to the channel!",
-      username: "RTCHAT",
+      message: 'Welcome to the channel!',
+      username: 'RTCHAT',
       createdTime: new Date().toISOString(),
     };
 
@@ -126,19 +126,21 @@ export const createServer = async (serverName: string) => {
 
     return serverRef.id; // Return the server ID
   } catch (error) {
-    console.error("Error creating server: ", error);
+    console.error('Error creating server: ', error);
     throw error;
   }
 };
 
+//TODO: Create add user
+
 export const deleteServer = async (serverID: string) => {
   try {
-    const serverdocRef = doc(db, "servers", serverID);
+    const serverdocRef = doc(db, 'servers', serverID);
     await updateDoc(serverdocRef, {
       active: false,
     });
   } catch (error) {
-    console.error("Error delete server: ", error);
+    console.error('Error delete server: ', error);
   }
 };
 
@@ -151,21 +153,21 @@ export const deleteServer = async (serverID: string) => {
 export const getUserServers = async (serverIDs: string[]) => {
   try {
     const serverPromises = serverIDs.map(async (id) => {
-      const serverRef = doc(db, "servers", id);
-      const channelQuery = query(collection(db, "servers", id, "channels"));
+      const serverRef = doc(db, 'servers', id);
+      const channelQuery = query(collection(db, 'servers', id, 'channels'));
       const channelSnapShot = await getDocs(channelQuery);
       const snapshot = await getDoc(serverRef);
       const data = snapshot.data();
       return {
         active: data?.active ?? false,
-        id: snapshot?.id ?? "",
+        id: snapshot?.id ?? '',
         channels:
           channelSnapShot?.docs.map((doc) => ({
             name: doc.data().name,
             serverId: doc.data().serverId,
             id: doc.id,
           })) ?? [],
-        name: data?.name ?? "",
+        name: data?.name ?? '',
         users: data?.users ?? [],
       };
     });
@@ -173,7 +175,7 @@ export const getUserServers = async (serverIDs: string[]) => {
     const results = await Promise.all(serverPromises);
     return results.filter((server) => server.active == true).reverse();
   } catch (error) {
-    console.error("Error fetching servers:", error);
+    console.error('Error fetching servers:', error);
     return [];
   }
 };
@@ -184,18 +186,18 @@ export const getChannelMessages = (
   setActivity: React.Dispatch<React.SetStateAction<Message[]>>
 ) => {
   const messageQuery = query(
-    collection(db, "servers", serverId, "channels", channelId, "messages"),
-    orderBy("createdTime")
+    collection(db, 'servers', serverId, 'channels', channelId, 'messages'),
+    orderBy('createdTime')
   );
 
   const unsubscribe = onSnapshot(messageQuery, (snapshot) => {
     const messages = snapshot.docs.map((doc) => ({
       username: doc.data().username,
       message: doc.data().message,
-      createdTime: doc.data().createdTime
-    }))
-    setActivity(messages)
-  })
+      createdTime: doc.data().createdTime,
+    }));
+    setActivity(messages);
+  });
 
   return unsubscribe;
 };
@@ -204,7 +206,7 @@ export const sendChannelMessage = async (
   message: string,
   username: string | null,
   serverId: string,
-  channelId: string,
+  channelId: string
 ) => {
   try {
     const messageData = {
@@ -213,26 +215,27 @@ export const sendChannelMessage = async (
       createdTime: new Date().toISOString(),
     };
 
-    await addDoc(collection(db, "servers", serverId, "channels", channelId, "messages"), messageData);
-
-    } catch (error) {
-    console.error("Error sending message", error);
+    await addDoc(
+      collection(db, 'servers', serverId, 'channels', channelId, 'messages'),
+      messageData
+    );
+  } catch (error) {
+    console.error('Error sending message', error);
   }
 };
 
 export const createServerInvite = async (serverId: string) => {
-  const uuid = crypto.randomUUID()
-  const cleaned_uuid = uuid.split('-')[0]
+  const uuid = crypto.randomUUID();
+  const cleaned_uuid = uuid.split('-')[0];
   const invite_data = {
     invite_code: cleaned_uuid,
     createdTime: new Date().toISOString(),
     days_till_expired: 1,
-  }
+  };
 
-  const serverRef = collection(db, "servers", serverId, "invite_codes")
-  
-  await addDoc(serverRef, invite_data)
+  const serverRef = collection(db, 'servers', serverId, 'invite_codes');
 
-  return cleaned_uuid
-   
-}
+  await addDoc(serverRef, invite_data);
+
+  return cleaned_uuid;
+};
