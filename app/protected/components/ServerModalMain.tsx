@@ -34,7 +34,7 @@ export const ServerModal = ({
         <motion.div
           key={modalView}
           onClick={(e) => e.stopPropagation()}
-          className="p-4 bg-black/75 border rounded-lg text-gray-700 font-semibold flex flex-col gap-4"
+          className="p-4 bg-black/85 border rounded-lg text-gray-700 font-semibold flex flex-col gap-4"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{
             opacity: 1,

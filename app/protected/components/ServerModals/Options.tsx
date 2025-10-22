@@ -13,12 +13,12 @@ export const OptionsModal = ({
         Your server is where you and your friends hang out
       </p>
       <motion.button
-        initial={{ borderColor: '#00ff00' }}
-        animate={{ borderColor: '#ff0000' }}
+        initial={{ borderColor: '#ffffffff' }}
         transition={{
-          duration: 1,
-          repeat: Infinity, // loop infinitely
-          repeatType: 'reverse', // alternate back and forth
+          duration: 0.15,
+        }}
+        whileHover={{
+          borderColor: '#ff0000',
         }}
         style={{
           borderWidth: 4,
@@ -26,6 +26,7 @@ export const OptionsModal = ({
           borderRadius: 12,
           padding: 4,
         }}
+        className="transition-colors transition-opacity duration-300 text-white/50 hover:text-white hover:opacity-100 border border-red-500 opacity-75"
         onClick={() => {
           setModalView('create');
         }}
@@ -33,37 +34,21 @@ export const OptionsModal = ({
         Create a server
       </motion.button>
 
-      <motion.div
-        initial={{ borderColor: '#00ff00' }}
-        animate={{ borderColor: '#ff0000' }}
+      <motion.button
+        initial={{ borderColor: '#ffffffff' }}
         transition={{
-          duration: 1,
-          repeat: Infinity, // loop infinitely
-          repeatType: 'reverse', // alternate back and forth
+          duration: 0.15,
+        }}
+        whileHover={{
+          borderColor: '#ff0000',
         }}
         style={{
           borderWidth: 4,
           borderStyle: 'solid',
           borderRadius: 12,
-          width: 200,
-          height: 100,
-          padding: 20,
+          padding: 4,
         }}
-      />
-      <motion.button
-        className="p-2 text-white rounded-lg font-semibold border border-gray-300"
-        initial={{
-          backgroundPosition: '0% 0%',
-        }}
-        whileHover={{
-          backgroundPosition: '0% 100%',
-        }}
-        transition={{ duration: 0.5 }}
-        style={{
-          backgroundImage:
-            'linear-gradient(to top,rgb(200, 0, 255) 50%, transparent 50%)',
-          backgroundSize: '100% 200%',
-        }}
+        className="transition-colors transition-opacity duration-300 text-white/50 hover:text-white hover:opacity-100 border border-red-500 opacity-75"
         onClick={() => {
           setModalView('add');
         }}
