@@ -49,7 +49,7 @@ export const getUsers = async () => {
 
 export const updateUser = async (
   userId: string,
-  updatedData: { [key: string]: any }
+  updatedData: { [key: string]: any } //fix this any
 ) => {
   try {
     const userDocRef = doc(db, 'users', userId);
