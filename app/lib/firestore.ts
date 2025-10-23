@@ -133,6 +133,11 @@ export const createServer = async (serverName: string) => {
 
 //TODO: Create add user
 
+export const addServer = async (inviteCode: string) => {
+  
+
+}
+
 export const deleteServer = async (serverID: string) => {
   try {
     const serverdocRef = doc(db, 'servers', serverID);

@@ -19,13 +19,13 @@ export const AddModal = () => {
         <p>Invite Code</p>
         <input
           placeholder="Enter invite code... (e.g. 95a6dacb)"
-          className="p-2 rounded-lg bg-black border text-red-500 focus:outline-none"
+          className="p-2 rounded-lg bg-black border focus:outline-none"
         />
       </div>
 
       <div className="flex items-center justify-between text-sm pt-2">
         <button>Back</button>
-        <button className="bg-red-600 px-3 py-2 rounded-2xl">
+        <button className="bg-red-600 px-3 py-2 rounded-2xl hover:bg-red-700 transition-colors duration-300">
           Join Server
         </button>
       </div>
