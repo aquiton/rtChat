@@ -1,6 +1,21 @@
+import { addServer } from '@/app/lib/server';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
-export const AddModal = () => {
+interface AddModalProps {
+  close: () => void;
+  refetch: () => void;
+}
+
+export const AddModal = ({ refetch, close }: AddModalProps) => {
+  const [inviteCode, setInviteCode] = useState('');
+
+  const handleAddServer = async (inviteCode: string) => {
+    addServer(inviteCode)
+      .then(() => refetch())
+      .then(() => close());
+  };
+
   return (
     <div className="flex flex-col text-white min-w-[325px]">
       <div className="flex justify-end">
@@ -18,14 +33,18 @@ export const AddModal = () => {
       <div className="flex flex-col gap-2 py-4">
         <p>Invite Code</p>
         <input
+          onChange={(e) => setInviteCode(e.currentTarget.value)}
           placeholder="Enter invite code... (e.g. 95a6dacb)"
-          className="p-2 rounded-lg bg-black border text-red-500 focus:outline-none"
+          className="p-2 rounded-lg bg-black border focus:outline-none"
         />
       </div>
 
       <div className="flex items-center justify-between text-sm pt-2">
         <button>Back</button>
-        <button className="bg-red-600 px-3 py-2 rounded-2xl">
+        <button
+          onClick={() => handleAddServer(inviteCode)}
+          className="bg-red-600 px-3 py-2 rounded-2xl hover:bg-red-700 transition-colors duration-300"
+        >
           Join Server
         </button>
       </div>

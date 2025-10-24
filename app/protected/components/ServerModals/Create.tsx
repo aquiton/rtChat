@@ -40,7 +40,7 @@ export const CreateModal = ({
 
       <p className="text-gray-400 text-white">SERVER NAME</p>
       <input
-        className="p-2 rounded-lg bg-black border text-red-500 focus:outline-none"
+        className="p-2 rounded-lg bg-black border focus:outline-none"
         placeholder="Server Name..."
         onChange={(e) => setServerName(e.currentTarget.value)}
         maxLength={20}
@@ -55,7 +55,7 @@ export const CreateModal = ({
           back
         </button>
         <button
-          className="text-white bg-red-600 px-3 py-2 rounded-2xl"
+          className="text-white bg-red-600 px-3 py-2 rounded-2xl hover:bg-red-700 transition-colors duration-300"
           onClick={handleCreateServer}
         >
           Create

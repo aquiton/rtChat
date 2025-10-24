@@ -56,7 +56,9 @@ export const ServerModal = ({
               refetch={refetch}
             />
           )}
-          {modalView === 'add' && <AddModal key="add" />}
+          {modalView === 'add' && (
+            <AddModal close={handleClose} refetch={refetch} />
+          )}
           {modalView === '' && (
             <OptionsModal key="options" setModalView={setModalView} />
           )}
