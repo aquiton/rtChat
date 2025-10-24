@@ -185,12 +185,17 @@ export default function ServerView({ serverData }: ServerViewProps) {
 
         {/* User */}
         <div className="flex flex-col w-40 p-4 items-center text-center border border-gray-100/25 rounded-tr-lg rounded-br-lg">
-          <p className="font-semibold font-mono text-sm text-red-600 shadow-xl shadow-red-500/50 hover:shadow-none hover:text-slate-500 hover:border-slate-500 border-b border-red-600">
+          <p className="my-2 font-semibold font-mono text-sm text-red-600 shadow-xl shadow-red-500/50 hover:shadow-none hover:text-slate-500 hover:border-slate-500 border-b border-red-600">
             ONLINE
           </p>
-          <p className="truncate w-32 text-sm py-2 text-white">
-            {serverData.users[0].name}
-          </p>
+          {serverData.users.map((user, idx) => {
+            return (
+              <p key={idx} className="truncate w-32 text-sm py-1 text-white">
+                {user.name}
+              </p>
+            );
+          })}
+
           <motion.button
             className=" p-2 text-sm font-semibold text-white/50 select-none hover:text-red-600"
             whileTap={{ scale: 0.8 }}
