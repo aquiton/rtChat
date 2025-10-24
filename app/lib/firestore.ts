@@ -7,6 +7,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   updateDoc,
 } from '@firebase/firestore';
 import { auth, db } from './firebaseConfig';
@@ -133,10 +134,7 @@ export const createServer = async (serverName: string) => {
 
 //TODO: Create add user
 
-export const addServer = async (inviteCode: string) => {
-  
-
-}
+export const addServer = async (inviteCode: string) => {};
 
 export const deleteServer = async (serverID: string) => {
   try {
@@ -232,15 +230,27 @@ export const sendChannelMessage = async (
 export const createServerInvite = async (serverId: string) => {
   const uuid = crypto.randomUUID();
   const cleaned_uuid = uuid.split('-')[0];
+  const createdTime = new Date().toISOString();
+
   const invite_data = {
-    invite_code: cleaned_uuid,
-    createdTime: new Date().toISOString(),
+    serverId: serverId,
+    createdTime: createdTime,
     days_till_expired: 1,
   };
 
+  const server_invite_data = {
+    invite_id: cleaned_uuid,
+    createdTime: createdTime,
+    days_till_expired: 1,
+  };
+
+  const inviteRef = doc(db, 'invite_codes', cleaned_uuid);
+
+  await setDoc(inviteRef, invite_data);
+
   const serverRef = collection(db, 'servers', serverId, 'invite_codes');
 
-  await addDoc(serverRef, invite_data);
+  await addDoc(serverRef, server_invite_data);
 
   return cleaned_uuid;
 };
