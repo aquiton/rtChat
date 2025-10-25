@@ -117,7 +117,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
             {serverData.channels.map((channel, index) => (
               <p
                 key={index}
-                className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:text-cyan-300 transition-all duration-300 select-none"
+                className="flex gap-1 p-2 m-2 text-sm rounded-lg text-white/50 hover:text-white transition-all duration-300 select-none"
               >
                 <HashtagIcon className="w-4 h-4" />
                 {channel.name}
