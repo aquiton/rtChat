@@ -86,7 +86,6 @@ export const createServer = async (serverName: string) => {
 
     const channelData = {
       name: 'general',
-      serverId: serverRef.id,
     };
 
     //Create channel doc in server
