@@ -110,7 +110,7 @@ export default function Home() {
       />
       {/* server component */}
       {servers.length > 0 && server ? (
-        <ServerView serverData={server} />
+        <ServerView serverData={server} refetch={serverRes.refetch} />
       ) : (
         <div className="flex w-full justify-center items-center text-slate-500 font-semibold text-lg gap-4">
           <ArrowLeftIcon className="w-6 h-6 stroke-2" />
