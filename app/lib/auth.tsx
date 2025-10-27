@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -6,11 +6,11 @@ import {
   signOut,
   updateProfile,
   User,
-} from "firebase/auth";
-import { useEffect, useState } from "react";
-import { auth, db, realTimedb } from "./firebaseConfig";
-import { onDisconnect, ref, set } from "firebase/database";
-import { doc, setDoc } from "@firebase/firestore";
+} from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { auth, db, realTimedb } from './firebaseConfig';
+import { onDisconnect, ref, set } from 'firebase/database';
+import { doc, setDoc } from '@firebase/firestore';
 
 // Methods that require Auth
 
@@ -32,9 +32,9 @@ export const signUp = async (
       username: username,
       servers: [],
     };
-    await setDoc(doc(db, "users", userCredential.user.uid), userData);
+    await setDoc(doc(db, 'users', userCredential.user.uid), userData);
   } catch (error: any) {
-    console.error("Sign up error:", error.message);
+    console.error('Sign up error:', error.message);
   }
 };
 
@@ -59,17 +59,17 @@ export const logout = async () => {
       realTimedb,
       `users/${auth.currentUser.uid}/status`
     );
-    await set(userStatusRef, "offline")
+    await set(userStatusRef, 'offline')
       .then(() => {
-        console.log("User status set to offline.");
+        console.log('User status set to offline.');
         signOut(auth); // Log out the user
       })
       .catch((error) => {
-        console.error("Error setting offline status:", error);
+        console.error('Error setting offline status:', error);
       });
   } else {
     await signOut(auth);
-    console.log("No user is logged in, just signed out.");
+    console.log('No user is logged in, just signed out.');
   }
 };
 
@@ -82,22 +82,24 @@ export function useUser() {
       const userStatusRef = ref(realTimedb, `users/${user?.uid}/status`);
       if (user) {
         // Mark user as online
-        set(userStatusRef, "online")
+        set(userStatusRef, 'online')
           .then(() => {
             // Mark user as offline when they disconnect
             onDisconnect(userStatusRef)
-              .set("offline")
+              .set('offline')
               .then(() => {
-                console.log("User will be marked offline upon disconnect");
+                console.log('User will be marked offline upon disconnect');
               });
           })
-          .catch((err) => console.error("Error setting online status:", err));
+          .catch((err) => console.error('Error setting online status:', err));
       } else {
         setUser(false);
-        onDisconnect(userStatusRef).set("offline");
+        onDisconnect(userStatusRef).set('offline');
       }
     });
   }, []);
 
   return user;
 }
+
+//implement method to check if user is online or not per server
