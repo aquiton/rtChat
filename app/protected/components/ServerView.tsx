@@ -49,7 +49,6 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
     if (!serverData?.id || !channel?.id) return;
     setActivity([]);
 
-    setChannel(serverData.channels[0]);
     const unsubscribe = getChannelMessages(
       serverData.id,
       channel.id,
@@ -65,7 +64,7 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
         currentMessage,
         currentUser.displayName,
         serverData.id,
-        serverData.channels[0].id
+        channel.id
       );
       setCurrentMessage('');
     }
@@ -116,20 +115,21 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
               setOpen={setOpenServerSettings}
             />
           </div>
-
           <div>
             <div className=" mx-2 my-2">Channels</div>
-            {serverData.channels
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((channel, index) => (
-                <p
+            <div className="flex flex-col px-1 gap-1">
+              {serverData.channels.map((channelItem, index) => (
+                <button
                   key={index}
-                  className="flex gap-1 p-2 m-2 text-sm rounded-lg text-white/50 hover:text-white transition-all duration-300 select-none"
+                  onClick={() => setChannel(serverData.channels[index])}
+                  className={`flex items-center gap-2 p-1 text-sm rounded-lg  hover:text-red-600 transition-all duration-200 select-none ${channel.id == channelItem.id ? 'bg-white/25 text-white' : 'text-white/50'}`}
                 >
                   <HashtagIcon className="w-4 h-4" />
-                  {channel.name}
-                </p>
+                  <p>{channelItem.name}</p>
+                </button>
               ))}
+            </div>
+
             <div className="flex justify-center">
               <motion.button
                 className="text-slate-600 shadow-md shadow-black rounded-lg p-2 m-4 text-sm whitespace-nowrap font-semibold select-none hover:text-red-600"
