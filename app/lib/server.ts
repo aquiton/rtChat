@@ -36,6 +36,4 @@ export const addServer = async (inviteCode: string) => {
   await updateDoc(userDocRef, {
     servers: arrayUnion(serverId),
   });
-
-  console.log('Server added successfully!');
 };

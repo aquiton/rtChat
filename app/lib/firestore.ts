@@ -12,6 +12,7 @@ import {
 } from '@firebase/firestore';
 import { auth, db } from './firebaseConfig';
 import { Message } from '../protected/components/ServerView';
+import { v4 as uuidv4 } from 'uuid';
 // Methods to access Firestore Database
 
 export const getCurrentUser = async () => {
@@ -86,7 +87,6 @@ export const createServer = async (serverName: string) => {
 
     const channelData = {
       name: 'general',
-      serverId: serverRef.id,
     };
 
     //Create channel doc in server
@@ -226,7 +226,7 @@ export const sendChannelMessage = async (
 };
 
 export const createServerInvite = async (serverId: string) => {
-  const uuid = crypto.randomUUID();
+  const uuid = uuidv4();
   const cleaned_uuid = uuid.split('-')[0];
   const createdTime = new Date().toISOString();
 

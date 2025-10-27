@@ -10,6 +10,7 @@ import {
   sendChannelMessage,
 } from '@/app/lib/firestore';
 import { InviteModal } from './ServerModals/InviteModal';
+import { CreateChannelModal } from './ServerModals/CreateChannelModal';
 
 export interface Message {
   username: string;
@@ -19,6 +20,7 @@ export interface Message {
 
 export interface ServerViewProps {
   serverData: Server;
+  refetch: () => void;
 }
 
 const SendMessage = (
@@ -30,21 +32,23 @@ const SendMessage = (
   sendChannelMessage(message, username, serverId, channelId);
 };
 
-export default function ServerView({ serverData }: ServerViewProps) {
+export default function ServerView({ serverData, refetch }: ServerViewProps) {
   const currentUser = auth.currentUser;
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
   const [channel, setChannel] = useState(serverData.channels[0]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
+  const [inviteCode, setInviteCode] = useState('');
+
+  //modals
+  const [openCreateChannelModal, setOpenCreateChannelModal] = useState(false);
   const [openInviteModal, setOpenInviteModal] = useState(false);
-  const [inviteCode, setInviteCode] = useState('d');
 
   useEffect(() => {
     if (!serverData?.id || !channel?.id) return;
     setActivity([]);
 
-    setChannel(serverData.channels[0]);
     const unsubscribe = getChannelMessages(
       serverData.id,
       channel.id,
@@ -60,7 +64,7 @@ export default function ServerView({ serverData }: ServerViewProps) {
         currentMessage,
         currentUser.displayName,
         serverData.id,
-        serverData.channels[0].id
+        channel.id
       );
       setCurrentMessage('');
     }
@@ -111,23 +115,27 @@ export default function ServerView({ serverData }: ServerViewProps) {
               setOpen={setOpenServerSettings}
             />
           </div>
-
           <div>
             <div className=" mx-2 my-2">Channels</div>
-            {serverData.channels.map((channel, index) => (
-              <p
-                key={index}
-                className="flex gap-1 p-2 m-2 text-sm rounded-lg hover:text-cyan-300 transition-all duration-300 select-none"
-              >
-                <HashtagIcon className="w-4 h-4" />
-                {channel.name}
-              </p>
-            ))}
+            <div className="flex flex-col px-1 gap-1">
+              {serverData.channels.map((channelItem, index) => (
+                <button
+                  key={index}
+                  onClick={() => setChannel(serverData.channels[index])}
+                  className={`flex items-center gap-2 p-1 text-sm rounded-lg  hover:text-red-600 transition-all duration-200 select-none ${channel.id == channelItem.id ? 'bg-white/25 text-white' : 'text-white/50'}`}
+                >
+                  <HashtagIcon className="w-4 h-4" />
+                  <p>{channelItem.name}</p>
+                </button>
+              ))}
+            </div>
+
             <div className="flex justify-center">
               <motion.button
                 className="text-slate-600 shadow-md shadow-black rounded-lg p-2 m-4 text-sm whitespace-nowrap font-semibold select-none hover:text-red-600"
                 whileTap={{ scale: 0.8 }}
                 whileHover={{ scale: 1.1 }}
+                onClick={() => setOpenCreateChannelModal(true)}
               >
                 Create Channel
               </motion.button>
@@ -214,6 +222,17 @@ export default function ServerView({ serverData }: ServerViewProps) {
             serverData={serverData}
             inviteCode={inviteCode}
             setInviteCode={setInviteCode}
+          />
+        ) : (
+          ''
+        )}
+
+        {openCreateChannelModal ? (
+          <CreateChannelModal
+            open={openCreateChannelModal}
+            setOpen={setOpenCreateChannelModal}
+            serverId={serverData.id}
+            refetch={refetch}
           />
         ) : (
           ''
