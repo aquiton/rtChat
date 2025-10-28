@@ -33,6 +33,11 @@ export const signUp = async (
       servers: [],
     };
     await setDoc(doc(db, 'users', userCredential.user.uid), userData);
+    const userStatusRef = ref(
+      realTimedb,
+      `users/${userCredential.user.uid}/status`
+    );
+    await set(userStatusRef, 'offline'); // Default to offline
   } catch (error: any) {
     console.error('Sign up error:', error.message);
   }
@@ -46,6 +51,12 @@ export const login = async (email: string, password: string) => {
       email,
       password
     );
+    const uid = userCredential.user.uid;
+    const userStatusRef = ref(realTimedb, `users/${uid}/status`);
+    await set(userStatusRef, 'online');
+
+    onDisconnect(userStatusRef).set('offline');
+
     return userCredential.user;
   } catch (error: any) {
     return false;
@@ -79,23 +90,6 @@ export function useUser() {
   useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
       setUser(user);
-      const userStatusRef = ref(realTimedb, `users/${user?.uid}/status`);
-      if (user) {
-        // Mark user as online
-        set(userStatusRef, 'online')
-          .then(() => {
-            // Mark user as offline when they disconnect
-            onDisconnect(userStatusRef)
-              .set('offline')
-              .then(() => {
-                console.log('User will be marked offline upon disconnect');
-              });
-          })
-          .catch((err) => console.error('Error setting online status:', err));
-      } else {
-        setUser(false);
-        onDisconnect(userStatusRef).set('offline');
-      }
     });
   }, []);
 
@@ -103,3 +97,4 @@ export function useUser() {
 }
 
 //implement method to check if user is online or not per server
+// per server approach
