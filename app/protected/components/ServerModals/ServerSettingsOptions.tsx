@@ -1,15 +1,15 @@
-import { deleteServer } from "@/app/lib/firestore";
-import { Dialog } from "@headlessui/react";
+import { Dialog } from '@headlessui/react';
 import {
   Cog6ToothIcon,
   TrashIcon,
   UserPlusIcon,
   XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { motion } from "motion/react";
-import { SetStateAction, useState } from "react";
-import { Server } from "../../home/page";
-import { useQueryClient } from "@tanstack/react-query";
+} from '@heroicons/react/24/outline';
+import { motion } from 'motion/react';
+import { SetStateAction, useState } from 'react';
+import { Server } from '../../home/page';
+import { useQueryClient } from '@tanstack/react-query';
+import { deleteServer } from '@/app/lib/server';
 
 interface ServerSettingProps {
   open: boolean;
@@ -38,10 +38,10 @@ export const ServerSettingsOptions = ({
     try {
       await deleteServer(serverData.id);
       await queryClient.invalidateQueries({
-        queryKey: ["userServers"],
+        queryKey: ['userServers'],
       });
     } catch (error) {
-      console.error("Error deleting server: ", error);
+      console.error('Error deleting server: ', error);
     }
   };
 
@@ -92,11 +92,11 @@ export const ServerSettingsOptions = ({
         animate={{ scaleY: 1 }}
         transition={{
           duration: 0.1,
-          type: "spring",
+          type: 'spring',
           stiffness: 500,
           damping: 20,
         }}
-        style={{ transformOrigin: "top" }}
+        style={{ transformOrigin: 'top' }}
       >
         <button className="hover:text-pink-500 transition duration-200 rounded-lg px-4 flex items-center justify-between w-full hover:scale-105 ">
           <p>Invite People</p>

@@ -98,3 +98,4 @@ export function useUser() {
 
 //implement method to check if user is online or not per server
 // per server approach
+// meaning subscribe to a shard/node and listen for any status updates

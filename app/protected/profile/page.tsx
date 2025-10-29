@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { logout } from "@/app/lib/auth";
-import { useLogoutStore } from "@/app/store/useLogoutStore";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
+import { logout } from '@/app/lib/auth';
+import { useLogoutStore } from '@/app/store/useLogoutStore';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 
 export default function Profile() {
   const { setIsLoggingOut } = useLogoutStore();
   const router = useRouter();
   const handleLogOut = async () => {
     setIsLoggingOut(true);
-    router.replace("/");
+    router.replace('/');
     await logout().finally(() => {
       setTimeout(() => {
         setIsLoggingOut(false);
