@@ -51,8 +51,10 @@ export const login = async (email: string, password: string) => {
       email,
       password
     );
+
     const uid = userCredential.user.uid;
     const userStatusRef = ref(realTimedb, `users/${uid}/status`);
+
     await set(userStatusRef, 'online');
 
     onDisconnect(userStatusRef).set('offline');

@@ -33,10 +33,6 @@ export const createServer = async (serverName: string) => {
 
     const serverRef = await addDoc(collection(db, 'servers'), serverData);
 
-    //TODO: create firebase node in realtime database
-
-    //TODO: add current user that is creating server to that node and status if they are online or not
-
     //Create channel data
 
     const channelData = {
