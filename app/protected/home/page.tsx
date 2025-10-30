@@ -6,11 +6,12 @@ import {
 } from '@heroicons/react/24/outline';
 import ServerView from '../components/ServerView';
 import { useEffect, useState } from 'react';
-import { getCurrentUser, getUserServers } from '@/app/lib/firestore';
 import { useQuery } from '@tanstack/react-query';
 import { ServerModal } from '../components/ServerModalMain';
 import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
+import { getUserServers } from '@/app/lib/server';
+import { getCurrentUser } from '@/app/lib/user';
 
 interface User {
   id: string;

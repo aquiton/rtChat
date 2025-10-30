@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
-import Link from "next/link";
+import { motion } from 'motion/react';
+import Link from 'next/link';
 
 export default function authGuard() {
   return (
@@ -13,7 +13,7 @@ export default function authGuard() {
       <p className="font-semibold text-xl text-red-500">
         You are trying to access a PRIVATE PAGE!
       </p>
-      <Link href={"/"}>Login</Link>
+      <Link href={'/'}>Login</Link>
     </motion.div>
   );
 }

@@ -1,4 +1,4 @@
-import { createServer } from '@/app/lib/firestore';
+import { createServer } from '@/app/lib/server';
 import { CameraIcon } from '@heroicons/react/24/outline';
 import { motion } from 'motion/react';
 import { SetStateAction, useState } from 'react';
