@@ -88,6 +88,12 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
 
   //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase databsae
 
+  useEffect(() => {
+    serverData.users.map((user) => {
+      
+    })
+  }, [serverData]);
+
   return (
     <div className="flex flex-col w-full font-mono">
       <div>

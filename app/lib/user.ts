@@ -52,3 +52,4 @@ export const updateUser = async (
     console.error('Error updating user: ', error);
   }
 };
+
