@@ -52,13 +52,6 @@ export const login = async (email: string, password: string) => {
       password
     );
 
-    const uid = userCredential.user.uid;
-    const userStatusRef = ref(realTimedb, `users/${uid}/status`);
-
-    await set(userStatusRef, 'online');
-
-    onDisconnect(userStatusRef).set('offline');
-
     return userCredential.user;
   } catch (error: any) {
     return false;
@@ -74,7 +67,6 @@ export const logout = async () => {
     );
     await set(userStatusRef, 'offline')
       .then(() => {
-        console.log('User status set to offline.');
         signOut(auth); // Log out the user
       })
       .catch((error) => {
@@ -92,12 +84,14 @@ export function useUser() {
   useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
       setUser(user);
+      if (user) {
+        const userStatusRef = ref(realTimedb, `users/${user.uid}/status`);
+
+        onDisconnect(userStatusRef).set('offline');
+        set(userStatusRef, 'online');
+      }
     });
   }, []);
 
   return user;
 }
-
-//implement method to check if user is online or not per server
-// per server approach
-// meaning subscribe to a shard/node and listen for any status updates

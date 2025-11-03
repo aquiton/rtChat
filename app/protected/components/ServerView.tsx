@@ -11,6 +11,7 @@ import {
 } from '@/app/lib/firestore';
 import { InviteModal } from './ServerModals/InviteModal';
 import { CreateChannelModal } from './ServerModals/CreateChannelModal';
+import { getUsersStatus } from '@/app/lib/user';
 
 export interface Message {
   username: string;
@@ -21,6 +22,10 @@ export interface Message {
 export interface ServerViewProps {
   serverData: Server;
   refetch: () => void;
+}
+
+export interface UserStatus {
+  [uid: string]: string;
 }
 
 const SendMessage = (
@@ -40,11 +45,15 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
   const [inviteCode, setInviteCode] = useState('');
+  const [userStatus, setUsersStatus] = useState(
+    Object.fromEntries(serverData.users.map((user) => [user.id, 'offline']))
+  );
 
-  //modals
+  // MODALS
   const [openCreateChannelModal, setOpenCreateChannelModal] = useState(false);
   const [openInviteModal, setOpenInviteModal] = useState(false);
 
+  // LISTENERS
   useEffect(() => {
     if (!serverData?.id || !channel?.id) return;
     setActivity([]);
@@ -56,6 +65,20 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
     );
     return unsubscribe;
   }, [serverData.id, channel.id]);
+
+  //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase database
+
+  useEffect(() => {
+    const unsubscribes: (() => void)[] = [];
+    serverData.users.forEach((user) => {
+      const unsubscribe = getUsersStatus(user.id, setUsersStatus);
+      unsubscribes.push(unsubscribe);
+    });
+
+    return () => {
+      unsubscribes.forEach((unsub) => unsub());
+    };
+  }, [serverData]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,8 +108,6 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
   }, [activity]);
-
-  //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase databsae
 
   return (
     <div className="flex flex-col w-full font-mono">
@@ -200,7 +221,10 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
           </p>
           {serverData.users.map((user, idx) => {
             return (
-              <p key={idx} className="truncate w-32 text-sm py-1 text-white">
+              <p
+                key={idx}
+                className={`truncate w-32 text-sm py-1 ${userStatus[user.id] == 'online' ? 'text-white' : 'text-white/50'}`}
+              >
                 {user.name}
               </p>
             );

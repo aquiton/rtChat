@@ -5,7 +5,10 @@ import {
   getDocs,
   updateDoc,
 } from '@firebase/firestore';
-import { auth, db } from './firebaseConfig';
+import { auth, db, realTimedb } from './firebaseConfig';
+import { onValue, ref } from 'firebase/database';
+import { SetStateAction } from 'react';
+import { UserStatus } from '../protected/components/ServerView';
 
 export const getCurrentUser = async () => {
   try {
@@ -51,4 +54,20 @@ export const updateUser = async (
   } catch (error) {
     console.error('Error updating user: ', error);
   }
+};
+
+export const getUsersStatus = (
+  uid: string,
+  setUser: React.Dispatch<SetStateAction<UserStatus>>
+) => {
+  const userStatusRef = ref(realTimedb, `users/${uid}/status`);
+  const unsubscribe = onValue(userStatusRef, (snapshot) => {
+    const status = snapshot.val();
+    setUser((prevStatus) => ({
+      ...prevStatus,
+      [uid]: status,
+    }));
+  });
+
+  return unsubscribe;
 };
