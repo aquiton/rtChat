@@ -5,7 +5,8 @@ import {
   getDocs,
   updateDoc,
 } from '@firebase/firestore';
-import { auth, db } from './firebaseConfig';
+import { auth, db, realTimedb } from './firebaseConfig';
+import { onValue, ref } from 'firebase/database';
 
 export const getCurrentUser = async () => {
   try {
@@ -53,3 +54,11 @@ export const updateUser = async (
   }
 };
 
+// export const getUsersStatus = async (uid: string, setUser: React.Dispatch<) => {
+//   const userStatusRef = ref(realTimedb, `users/${uid}/status`)
+//   const unsubscribe = onValue(userStatusRef, (snapshot) => {
+//     const status = snapshot.val()
+
+//   })
+
+// }

@@ -40,6 +40,9 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
   const [activity, setActivity] = useState<Message[]>([]);
   const [openServerSettings, setOpenServerSettings] = useState(false);
   const [inviteCode, setInviteCode] = useState('');
+  const [userStatus, setUsersStatus] = useState(
+    Object.fromEntries(serverData.users.map((user) => [user.id, 'offline']))
+  );
 
   //modals
   const [openCreateChannelModal, setOpenCreateChannelModal] = useState(false);
@@ -86,12 +89,12 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
     }
   }, [activity]);
 
-  //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase databsae
+  //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase database
 
   useEffect(() => {
     serverData.users.map((user) => {
-      
-    })
+      //TODO CALL THE USERS.TS getUsersStatus func
+    });
   }, [serverData]);
 
   return (

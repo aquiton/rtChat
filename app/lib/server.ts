@@ -8,9 +8,8 @@ import {
   query,
   updateDoc,
 } from 'firebase/firestore';
-import { auth, db, realTimedb } from './firebaseConfig';
+import { auth, db } from './firebaseConfig';
 import { getCurrentUser, updateUser } from './user';
-import { onValue, ref } from '@firebase/database';
 
 export const createServer = async (serverName: string) => {
   try {
@@ -166,9 +165,3 @@ export const addServer = async (inviteCode: string) => {
     servers: arrayUnion(serverId),
   });
 };
-
-export const onlineServerUsers = async (uid: string) => {
-  const userStatusRef = ref(realTimedb, `users/${uid}/status`)
-  onValue
-
-}
