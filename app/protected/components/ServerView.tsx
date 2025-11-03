@@ -80,8 +80,6 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
     };
   }, [serverData]);
 
-  console.log(userStatus);
-
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (currentMessage != '' && currentUser) {
@@ -223,7 +221,10 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
           </p>
           {serverData.users.map((user, idx) => {
             return (
-              <p key={idx} className="truncate w-32 text-sm py-1 text-white">
+              <p
+                key={idx}
+                className={`truncate w-32 text-sm py-1 ${userStatus[user.id] == 'online' ? 'text-white' : 'text-white/50'}`}
+              >
                 {user.name}
               </p>
             );
