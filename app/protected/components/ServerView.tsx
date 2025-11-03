@@ -11,6 +11,7 @@ import {
 } from '@/app/lib/firestore';
 import { InviteModal } from './ServerModals/InviteModal';
 import { CreateChannelModal } from './ServerModals/CreateChannelModal';
+import { getUsersStatus } from '@/app/lib/user';
 
 export interface Message {
   username: string;
@@ -21,6 +22,10 @@ export interface Message {
 export interface ServerViewProps {
   serverData: Server;
   refetch: () => void;
+}
+
+export interface UserStatus {
+  [uid: string]: string;
 }
 
 const SendMessage = (
@@ -44,10 +49,11 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
     Object.fromEntries(serverData.users.map((user) => [user.id, 'offline']))
   );
 
-  //modals
+  // MODALS
   const [openCreateChannelModal, setOpenCreateChannelModal] = useState(false);
   const [openInviteModal, setOpenInviteModal] = useState(false);
 
+  // LISTENERS
   useEffect(() => {
     if (!serverData?.id || !channel?.id) return;
     setActivity([]);
@@ -59,6 +65,22 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
     );
     return unsubscribe;
   }, [serverData.id, channel.id]);
+
+  //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase database
+
+  useEffect(() => {
+    const unsubscribes: (() => void)[] = [];
+    serverData.users.forEach((user) => {
+      const unsubscribe = getUsersStatus(user.id, setUsersStatus);
+      unsubscribes.push(unsubscribe);
+    });
+
+    return () => {
+      unsubscribes.forEach((unsub) => unsub());
+    };
+  }, [serverData]);
+
+  console.log(userStatus);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,14 +110,6 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
   }, [activity]);
-
-  //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase database
-
-  useEffect(() => {
-    serverData.users.map((user) => {
-      //TODO CALL THE USERS.TS getUsersStatus func
-    });
-  }, [serverData]);
 
   return (
     <div className="flex flex-col w-full font-mono">
