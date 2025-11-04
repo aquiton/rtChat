@@ -60,26 +60,37 @@ export const ServerSettingsOptions = ({
         onClose={handleClose}
         className="absolute w-auto inset-0 z-50"
       >
-        <div className="bg-red-500 w-full h-screen flex">
+        <div
+          className="bg-red-500 w-full h-screen flex"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="flex flex-col w-1/3 bg-zinc-900 text-zinc-100 items-end p-4">
             <XMarkIcon
-              className="size-4 stroke-2 text-zinc-100"
+              className="size-4 stroke-2 text-zinc-100 bg-red-500"
               onClick={() => setOpenServerSettings(false)}
             />
-            <p>Options</p>
-            <ul>
-              <li className="font-[700] flex gap-2 text-red-500">
-                <button onClick={handleDelete} className="flex gap-1">
-                  <TrashIcon className="size-5 stroke-2 text-red-500" />
+            <ul className="w-1/3">
+              <li className="py-1">
+                <button>
+                  <p>Server Profile</p>
+                </button>
+              </li>
+              <li className="py-1 font-[700] flex gap-2 text-red-500">
+                <button
+                  onClick={handleDelete}
+                  className="flex w-full items-center justify-between"
+                >
                   <p className="font-[700] text-red-500">Delete Server</p>
+                  <TrashIcon className="size-5 stroke-2 text-red-500" />
                 </button>
               </li>
             </ul>
           </div>
-          <div className="flex w-2/3 bg-zinc-800">
+          <div className="flex w-1/3 bg-zinc-800">
             <div>View</div>
             <div>Get outta here x button</div>
           </div>
+          <div className="flex w-1/3 bg-black"></div>
         </div>
       </Dialog>
 
