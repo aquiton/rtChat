@@ -1,6 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import { SetStateAction, useState } from 'react';
 import { Server } from '../../home/page';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface InviteModalProps {
   open: boolean;
@@ -42,13 +43,22 @@ export const InviteModal = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="border border-gray-100 bg-black/75 rounded-2xl text-white p-6 w-1/3 flex flex-col gap-2 items-center"
+        className="border border-gray-100 bg-black/75 rounded-2xl text-white p-4 w-fit min-w-[350px] flex flex-col gap-3 justify-center "
       >
-        <p className="font-[700]">Invite friends to {serverData.name} </p>
+        <div className="flex items-center justify-between w-full">
+          <p className="font-[700]">Invite friends to {serverData.name} </p>
+          <XMarkIcon
+            className="size-5 stroke-2 hover:text-red-600 hover:cursor-pointer"
+            onClick={handleClose}
+          />
+        </div>
+        <p className="text-sm text-white/75 font-[300]">
+          Send a server invite link to a friend
+        </p>
         <div
-          className={`border border-gray-100/25 flex justify-between items-center w-1/2 bg-black/25 p-2 p-2 rounded-lg text-white ${isCopied ? 'border-green-500' : ''}`}
+          className={` border border-gray-100/25 flex justify-between items-center w-full bg-black/25 p-2 rounded-lg text-white ${isCopied ? 'border-green-500' : ''}`}
         >
-          <p>{inviteCode ?? 'loading'}</p>
+          <p>{inviteCode ? inviteCode : 'Generating...'}</p>
           <button
             onClick={() => handleCopy(inviteCode)}
             className={`transition-colors duration-300 font-[700] text-sm bg-red-600 py-1 px-4 rounded-lg ${isCopied ? 'bg-green-700' : 'hover:bg-red-700'}`}

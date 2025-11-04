@@ -25,6 +25,7 @@ export const CreateChannelModal = ({
   const handleCreateChannel = async () => {
     await createChannel(serverId, channelName);
     refetch();
+    handleClose();
   };
 
   return (
@@ -40,7 +41,10 @@ export const CreateChannelModal = ({
       >
         <div className="flex items-center justify-between">
           <p className="text-2xl">Create Channel</p>
-          <XMarkIcon className="stroke-2 shrink-0 w-5 h-5" />
+          <XMarkIcon
+            className="stroke-2 shrink-0 w-5 h-5 hover:text-red-600 hover:cursor-pointer"
+            onClick={handleClose}
+          />
         </div>
 
         <div className="flex flex-col gap-1">

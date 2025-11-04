@@ -87,7 +87,7 @@ export const ServerSettingsOptions = ({
 
       <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-24 left-24 flex flex-col p-2 gap-1 bg-gray-600 shadow-lg shadow-black rounded-lg text-white w-auto text-sm"
+        className="absolute top-24 left-24 flex flex-col p-2 gap-1 bg-black border rounded-lg text-white w-auto text-sm"
         initial={{ scaleY: 0.5 }}
         animate={{ scaleY: 1 }}
         transition={{
@@ -98,16 +98,16 @@ export const ServerSettingsOptions = ({
         }}
         style={{ transformOrigin: 'top' }}
       >
-        <button className="hover:text-pink-500 transition duration-200 rounded-lg px-4 flex items-center justify-between w-full hover:scale-105 ">
+        <button className="group transition duration-200 rounded-lg px-4 flex items-center justify-between w-full hover:scale-105 ">
           <p>Invite People</p>
-          <UserPlusIcon className="size-5 rounded-full m-2" />
+          <UserPlusIcon className="group-hover:text-red-600 size-5 rounded-full m-2" />
         </button>
         <button
           onClick={handleServerSettings}
-          className="hover:text-orange-600 transition duration-200 rounded-lg px-4 flex items-center justify-between w-full hover:scale-105"
+          className="group transition duration-200 rounded-lg px-4 flex items-center justify-between w-full hover:scale-105"
         >
           <p>Server Settings</p>
-          <Cog6ToothIcon className="size-5 rounded-full m-2" />
+          <Cog6ToothIcon className="group-hover:text-red-600 group-hover:animate-spin size-5 rounded-full m-2" />
         </button>
       </motion.div>
     </Dialog>

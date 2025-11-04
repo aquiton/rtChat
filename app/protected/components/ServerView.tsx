@@ -129,8 +129,13 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
         <div className="flex flex-col max-w-64 border border-gray-100/25 rounded-tl-lg rounded-bl-lg">
           <div className="relative flex items-center border-gray-100/25 border-b p-4 text-sm  whitespace-nowrap w-60">
             <p className="truncate">{serverData.name}</p>
-            <button className="m-1" onClick={() => setOpenServerSettings(true)}>
-              <ChevronDownIcon className="w-4 h-4 text-red-600" />
+            <button
+              className="m-1 group"
+              onClick={() => setOpenServerSettings(true)}
+            >
+              <ChevronDownIcon
+                className={`w-4 h-4 group-hover:text-red-500 text-red-600 ${openServerSettings ? 'rotate-180' : ''} transition-transform duration-200`}
+              />
             </button>
             <ServerSettingsOptions
               serverData={serverData}
