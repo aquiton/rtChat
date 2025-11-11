@@ -64,18 +64,18 @@ export const ServerSettingsOptions = ({
           className="bg-red-500 w-full h-screen flex"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex flex-col w-1/3 bg-zinc-900 text-zinc-100 items-end p-4">
+          <div className="flex flex-col w-1/4 bg-zinc-900 text-zinc-100 items-end p-4">
             <XMarkIcon
-              className="size-4 stroke-2 text-zinc-100 bg-red-500"
+              className="size-5 stroke-2 text-zinc-100"
               onClick={() => setOpenServerSettings(false)}
             />
-            <ul className="w-1/3">
-              <li className="py-1">
+            <ul className="flex flex-col gap-1 w-4/6">
+              <li className="hover:bg-white/25 rounded-md p-1">
                 <button>
                   <p>Server Profile</p>
                 </button>
               </li>
-              <li className="py-1 font-[700] flex gap-2 text-red-500">
+              <li className="hover:bg-red-500/10 rounded-md p-1">
                 <button
                   onClick={handleDelete}
                   className="flex w-full items-center justify-between"
@@ -86,11 +86,12 @@ export const ServerSettingsOptions = ({
               </li>
             </ul>
           </div>
-          <div className="flex w-1/3 bg-zinc-800">
+
+          <div className="flex w-2/4 bg-zinc-800">
             <div>View</div>
-            <div>Get outta here x button</div>
           </div>
-          <div className="flex w-1/3 bg-black"></div>
+
+          <div className="flex w-1/4 bg-black"></div>
         </div>
       </Dialog>
 
