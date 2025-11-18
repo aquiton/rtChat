@@ -2,6 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Server } from '../../home/page';
 import { useUser } from '@/app/lib/auth';
+import { useEffect, useRef } from 'react';
 
 interface ServerSettingsViewProps {
   openServerSettings: boolean;
@@ -16,15 +17,19 @@ export const ServerSettingsView = ({
   serverData,
   handleDelete,
 }: ServerSettingsViewProps) => {
+  const currentUser = useUser();
+  const currentuserRole = currentUser
+    ? serverData.users.find((user) => user.id === currentUser.uid)?.role
+    : '';
+  const serverProfileRef = useRef<HTMLButtonElement>(null);
+
   const handleClose = () => {
     setOpenServerSettings(false);
   };
 
-  const currentUser = useUser();
-
-  const currentuserRole = currentUser
-    ? serverData.users.find((user) => user.id === currentUser.uid)?.role
-    : '';
+  useEffect(() => {
+    serverProfileRef.current?.focus();
+  }, []);
 
   return (
     <Dialog
@@ -46,7 +51,10 @@ export const ServerSettingsView = ({
               <p className="px-3 text-xs text-white/25">
                 {serverData.name.toUpperCase()}
               </p>
-              <button className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3 w-full text-start focus:bg-red-700 focus:shadow-md focus:shadow-red-500/25">
+              <button
+                className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3 w-full text-start focus:bg-red-700 focus:text-white"
+                ref={serverProfileRef}
+              >
                 <p>Server Profile</p>
               </button>
             </section>
@@ -54,21 +62,17 @@ export const ServerSettingsView = ({
 
             <section className="flex flex-col gap-1 py-1">
               <p className="px-3 text-xs text-white/25">PEOPLE</p>
-              <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
-                <button>
-                  <p>Roles</p>
-                </button>
-              </div>
+              <button className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3 w-full text-start focus:bg-red-700 focus:text-white">
+                <p>Roles</p>
+              </button>
             </section>
             <div className="border-b border-white/25 ml-3" />
 
             <section className="py-1">
               <p className="px-3 text-xs text-white/25">MODERATION</p>
-              <div className="transition-duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
-                <button>
-                  <p>Bans</p>
-                </button>
-              </div>
+              <button className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3 w-full text-start focus:bg-red-700 focus:text-white">
+                <p>Bans</p>
+              </button>
             </section>
             <div className="border-b border-white/25 ml-3" />
 
@@ -92,7 +96,7 @@ export const ServerSettingsView = ({
         </div>
 
         <div className="text-white flex w-2/4 rounded-lg">
-          <div className=""></div>
+          <div className="">d</div>
         </div>
 
         <div className="flex w-1/4 bg-black"></div>
