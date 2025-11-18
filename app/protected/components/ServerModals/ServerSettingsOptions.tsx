@@ -1,15 +1,11 @@
 import { Dialog } from '@headlessui/react';
-import {
-  Cog6ToothIcon,
-  TrashIcon,
-  UserPlusIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { Cog6ToothIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 import { motion } from 'motion/react';
 import { SetStateAction, useState } from 'react';
 import { Server } from '../../home/page';
 import { useQueryClient } from '@tanstack/react-query';
 import { deleteServer } from '@/app/lib/server';
+import { ServerSettingsView } from './ServerSettingsView';
 
 interface ServerSettingProps {
   open: boolean;
@@ -52,88 +48,7 @@ export const ServerSettingsOptions = ({
       onClick={handleClose}
       className="absolute w-auto inset-0 z-40 "
     >
-      {/* 
-        Server Settings modal   
-      */}
-      <Dialog
-        open={openServerSettings}
-        onClose={handleClose}
-        className="absolute w-auto inset-0 z-50"
-      >
-        <div
-          className="bg-black w-full h-screen flex"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex flex-col w-1/4 bg-black text-zinc-100 items-end p-4">
-            <XMarkIcon
-              className="size-5 stroke-2 text-zinc-100"
-              onClick={() => setOpenServerSettings(false)}
-            />
-            <div className="flex flex-col gap-2 w-4/6">
-              <section className="py-1">
-                <p className="px-3 text-xs text-white/25">
-                  {serverData.name.toUpperCase()}
-                </p>
-                <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
-                  <button>
-                    <p>Server Profile</p>
-                  </button>
-                </div>
-              </section>
-              <div className="border-b border-white/25 ml-3" />
-
-              <section className="flex flex-col gap-1 py-1">
-                <p className="px-3 text-xs text-white/25">PEOPLE</p>
-                <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
-                  <button>
-                    <p>Roles</p>
-                  </button>
-                </div>
-                <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
-                  <button>
-                    <p>Roles</p>
-                  </button>
-                </div>
-              </section>
-              <div className="border-b border-white/25 ml-3" />
-
-              <section className="py-1">
-                <p className="px-3 text-xs text-white/25">MODERATION</p>
-                <div className="transition-duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
-                  <button>
-                    <p>Bans</p>
-                  </button>
-                </div>
-              </section>
-              <div className="border-b border-white/25 ml-3" />
-
-              <section className="py-1">
-                <div className="px-3 group hover:bg-red-500/10 rounded-md">
-                  <button
-                    onClick={handleDelete}
-                    className="flex w-full items-center justify-between"
-                  >
-                    <p className="whitespace-nowrap font-[700] text-red-500">
-                      Delete Server
-                    </p>
-                    <div className="group-hover:bg-white/50 rounded-full h-[1px] w-0 group-hover:w-full mx-2 transition-all duration-700" />
-                    <TrashIcon className="shrink-0 size-5 stroke-2 text-red-500" />
-                  </button>
-                </div>
-              </section>
-            </div>
-          </div>
-
-          <div className="text-white flex w-2/4 rounded-lg">
-            <div className=""></div>
-          </div>
-
-          <div className="flex w-1/4 bg-black"></div>
-        </div>
-      </Dialog>
-
       {/* server action options  */}
-
       <motion.div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-24 left-24 flex flex-col p-2 gap-1 bg-black border rounded-lg text-white w-auto text-sm"
@@ -159,6 +74,14 @@ export const ServerSettingsOptions = ({
           <Cog6ToothIcon className="group-hover:text-red-600 group-hover:animate-spin size-5 rounded-full m-2" />
         </button>
       </motion.div>
+      {openServerSettings && (
+        <ServerSettingsView
+          openServerSettings={openServerSettings}
+          setOpenServerSettings={setOpenServerSettings}
+          serverData={serverData}
+          handleDelete={handleDelete}
+        />
+      )}
     </Dialog>
   );
 };

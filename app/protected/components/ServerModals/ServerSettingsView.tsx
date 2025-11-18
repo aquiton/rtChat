@@ -1,0 +1,102 @@
+import { Dialog } from '@headlessui/react';
+import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { Server } from '../../home/page';
+import { useUser } from '@/app/lib/auth';
+
+interface ServerSettingsViewProps {
+  openServerSettings: boolean;
+  setOpenServerSettings: (open: boolean) => void;
+  serverData: Server;
+  handleDelete: () => void;
+}
+
+export const ServerSettingsView = ({
+  openServerSettings,
+  setOpenServerSettings,
+  serverData,
+  handleDelete,
+}: ServerSettingsViewProps) => {
+  const handleClose = () => {
+    setOpenServerSettings(false);
+  };
+
+  const currentUser = useUser();
+
+  const currentuserRole = currentUser
+    ? serverData.users.find((user) => user.id === currentUser.uid)?.role
+    : '';
+
+  return (
+    <Dialog
+      open={openServerSettings}
+      onClose={handleClose}
+      className="absolute w-auto inset-0 z-50"
+    >
+      <div
+        className="bg-black w-full h-screen flex"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex flex-col w-1/4 bg-black text-zinc-100 items-end p-4">
+          <XMarkIcon
+            className="size-5 stroke-2 text-zinc-100"
+            onClick={() => setOpenServerSettings(false)}
+          />
+          <div className="flex flex-col gap-2 w-4/6">
+            <section className="py-1">
+              <p className="px-3 text-xs text-white/25">
+                {serverData.name.toUpperCase()}
+              </p>
+              <button className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3 w-full text-start focus:bg-red-700 focus:shadow-md focus:shadow-red-500/25">
+                <p>Server Profile</p>
+              </button>
+            </section>
+            <div className="border-b border-white/25 ml-3" />
+
+            <section className="flex flex-col gap-1 py-1">
+              <p className="px-3 text-xs text-white/25">PEOPLE</p>
+              <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
+                <button>
+                  <p>Roles</p>
+                </button>
+              </div>
+            </section>
+            <div className="border-b border-white/25 ml-3" />
+
+            <section className="py-1">
+              <p className="px-3 text-xs text-white/25">MODERATION</p>
+              <div className="transition-duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
+                <button>
+                  <p>Bans</p>
+                </button>
+              </div>
+            </section>
+            <div className="border-b border-white/25 ml-3" />
+
+            {currentuserRole === 'owner' && (
+              <section className="py-1">
+                <div className="px-3 group hover:bg-red-500/10 rounded-md">
+                  <button
+                    onClick={handleDelete}
+                    className="flex w-full items-center justify-between"
+                  >
+                    <p className="whitespace-nowrap font-[700] text-red-500">
+                      Delete Server
+                    </p>
+                    <div className="group-hover:bg-white/50 rounded-full h-[1px] w-0 group-hover:w-full mx-2 transition-all duration-700" />
+                    <TrashIcon className="shrink-0 size-5 stroke-2 text-red-500" />
+                  </button>
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
+
+        <div className="text-white flex w-2/4 rounded-lg">
+          <div className=""></div>
+        </div>
+
+        <div className="flex w-1/4 bg-black"></div>
+      </div>
+    </Dialog>
+  );
+};
