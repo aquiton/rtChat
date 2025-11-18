@@ -60,26 +60,75 @@ export const ServerSettingsOptions = ({
         onClose={handleClose}
         className="absolute w-auto inset-0 z-50"
       >
-        <div className="bg-red-500 w-full h-screen flex">
-          <div className="flex flex-col w-1/3 bg-zinc-900 text-zinc-100 items-end p-4">
+        <div
+          className="bg-black w-full h-screen flex"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col w-1/4 bg-black text-zinc-100 items-end p-4">
             <XMarkIcon
-              className="size-4 stroke-2 text-zinc-100"
+              className="size-5 stroke-2 text-zinc-100"
               onClick={() => setOpenServerSettings(false)}
             />
-            <p>Options</p>
-            <ul>
-              <li className="font-[700] flex gap-2 text-red-500">
-                <button onClick={handleDelete} className="flex gap-1">
-                  <TrashIcon className="size-5 stroke-2 text-red-500" />
-                  <p className="font-[700] text-red-500">Delete Server</p>
-                </button>
-              </li>
-            </ul>
+            <div className="flex flex-col gap-2 w-4/6">
+              <section className="py-1">
+                <p className="px-3 text-xs text-white/25">
+                  {serverData.name.toUpperCase()}
+                </p>
+                <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
+                  <button>
+                    <p>Server Profile</p>
+                  </button>
+                </div>
+              </section>
+              <div className="border-b border-white/25 ml-3" />
+
+              <section className="flex flex-col gap-1 py-1">
+                <p className="px-3 text-xs text-white/25">PEOPLE</p>
+                <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
+                  <button>
+                    <p>Roles</p>
+                  </button>
+                </div>
+                <div className="transition duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
+                  <button>
+                    <p>Roles</p>
+                  </button>
+                </div>
+              </section>
+              <div className="border-b border-white/25 ml-3" />
+
+              <section className="py-1">
+                <p className="px-3 text-xs text-white/25">MODERATION</p>
+                <div className="transition-duration-300 hover:text-white text-white/50 hover:bg-white/25 rounded-md px-3">
+                  <button>
+                    <p>Bans</p>
+                  </button>
+                </div>
+              </section>
+              <div className="border-b border-white/25 ml-3" />
+
+              <section className="py-1">
+                <div className="px-3 group hover:bg-red-500/10 rounded-md">
+                  <button
+                    onClick={handleDelete}
+                    className="flex w-full items-center justify-between"
+                  >
+                    <p className="whitespace-nowrap font-[700] text-red-500">
+                      Delete Server
+                    </p>
+                    <div className="group-hover:bg-white/50 rounded-full h-[1px] w-0 group-hover:w-full mx-2 transition-all duration-700" />
+                    <TrashIcon className="shrink-0 size-5 stroke-2 text-red-500" />
+                  </button>
+                </div>
+              </section>
+            </div>
           </div>
-          <div className="flex w-2/3 bg-zinc-800">
-            <div>View</div>
-            <div>Get outta here x button</div>
+
+          <div className="text-white flex w-2/4 rounded-lg">
+            <div className=""></div>
           </div>
+
+          <div className="flex w-1/4 bg-black"></div>
         </div>
       </Dialog>
 
