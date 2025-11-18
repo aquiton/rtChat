@@ -61,7 +61,7 @@ export const ServerSettingsOptions = ({
         className="absolute w-auto inset-0 z-50"
       >
         <div
-          className="bg-red-500 w-full h-screen flex"
+          className="bg-black w-full h-screen flex"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex flex-col w-1/4 bg-black text-zinc-100 items-end p-4">
@@ -124,8 +124,8 @@ export const ServerSettingsOptions = ({
             </div>
           </div>
 
-          <div className="flex w-2/4 bg-zinc-800">
-            <div>View</div>
+          <div className="text-white flex w-2/4 rounded-lg">
+            <div className=""></div>
           </div>
 
           <div className="flex w-1/4 bg-black"></div>
