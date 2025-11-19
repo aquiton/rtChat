@@ -1,5 +1,4 @@
 import { createServer } from '@/app/lib/server';
-import { CameraIcon } from '@heroicons/react/24/outline';
 import { motion } from 'motion/react';
 import { SetStateAction, useState } from 'react';
 
@@ -26,17 +25,6 @@ export const CreateModal = ({
         Give your new server a peronality with a name and an icon. <br />
         You can always change it later.
       </p>
-
-      <div className="flex justify-center">
-        <input id="fileInput" type="file" accept="image/*" className="hidden" />
-        <label
-          htmlFor="fileInput"
-          className="flex flex-col p-2 w-1/5 items-center justify-center hover:cursor-pointer border-2 border-dashed border-white/50 rounded-full hover:border-red-600 hover:text-white/50 transition-all duration-300"
-        >
-          <CameraIcon className="w-6 h-6" />
-          <p className="text-sm">UPLOAD</p>
-        </label>
-      </div>
 
       <p className="text-gray-400 text-white">SERVER NAME</p>
       <input

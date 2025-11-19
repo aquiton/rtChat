@@ -95,8 +95,9 @@ export const ServerSettingsView = ({
           </div>
         </div>
 
-        <div className="text-white flex w-2/4 rounded-lg">
-          <div className="">d</div>
+        <div className="p-6 text-white flex flex-col w-2/4 rounded-lg">
+          <p className="font-bold text-2xl">Server Profile</p>
+          <p className="text-sm">Customize how your server appears to others</p>
         </div>
 
         <div className="flex w-1/4 bg-black"></div>

@@ -2,17 +2,15 @@ import {
   addDoc,
   collection,
   doc,
-  getDoc,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
   setDoc,
-  updateDoc,
 } from '@firebase/firestore';
 import { db } from './firebaseConfig';
 import { Message } from '../protected/components/ServerView';
 import { v4 as uuidv4 } from 'uuid';
+
 // Methods to access Firestore Database
 
 export const getChannelMessages = (
