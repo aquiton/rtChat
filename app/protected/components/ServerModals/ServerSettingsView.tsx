@@ -104,6 +104,13 @@ export const ServerSettingsView = ({
           />
         </div>
 
+        <div
+          className={`${serverName.length < 1}border border-white/50 rounded-lg flex items-center gap-4`}
+        >
+          <button>Cancel</button>
+          <button>Save Changes</button>
+        </div>
+
         <div className="flex w-1/4 bg-black text-white p-6 justify-end">
           <XMarkIcon
             className="size-10 stroke-2 text-white/50 border-2 border-white/50 rounded-full p-2 hover:text-white hover:border-white hover:cursor-pointer"
