@@ -3,6 +3,7 @@ import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Server } from '../../home/page';
 import { useUser } from '@/app/lib/auth';
 import { useEffect, useRef } from 'react';
+import { ServerProfileView } from '../ServerSettingViews/ServerProfile';
 
 interface ServerSettingsViewProps {
   openServerSettings: boolean;
@@ -42,10 +43,6 @@ export const ServerSettingsView = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col w-1/4 bg-black text-zinc-100 items-end p-4">
-          <XMarkIcon
-            className="size-5 stroke-2 text-zinc-100"
-            onClick={() => setOpenServerSettings(false)}
-          />
           <div className="flex flex-col gap-2 w-4/6">
             <section className="py-1">
               <p className="px-3 text-xs text-white/25">
@@ -95,12 +92,14 @@ export const ServerSettingsView = ({
           </div>
         </div>
 
-        <div className="p-6 text-white flex flex-col w-2/4 rounded-lg">
-          <p className="font-bold text-2xl">Server Profile</p>
-          <p className="text-sm">Customize how your server appears to others</p>
-        </div>
+        <ServerProfileView serverData={serverData} />
 
-        <div className="flex w-1/4 bg-black"></div>
+        <div className="flex w-1/4 bg-black text-white p-6 justify-end">
+          <XMarkIcon
+            className="size-10 stroke-2 text-white/50 border-2 border-white/50 rounded-full p-2 hover:text-white hover:border-white hover:cursor-pointer"
+            onClick={() => setOpenServerSettings(false)}
+          />
+        </div>
       </div>
     </Dialog>
   );
