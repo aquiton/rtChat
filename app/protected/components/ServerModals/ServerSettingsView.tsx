@@ -2,7 +2,8 @@ import { Dialog } from '@headlessui/react';
 import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Server } from '../../home/page';
 import { useUser } from '@/app/lib/auth';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { ServerProfileView } from '../ServerSettingViews/ServerProfile';
 
 interface ServerSettingsViewProps {
   openServerSettings: boolean;
@@ -22,7 +23,6 @@ export const ServerSettingsView = ({
     ? serverData.users.find((user) => user.id === currentUser.uid)?.role
     : '';
   const serverProfileRef = useRef<HTMLButtonElement>(null);
-  const [serverName, setServerName] = useState(serverData.name);
 
   const handleClose = () => {
     setOpenServerSettings(false);
@@ -92,24 +92,7 @@ export const ServerSettingsView = ({
           </div>
         </div>
 
-        <div className="p-6 text-white flex flex-col w-2/4 rounded-lg">
-          <p className="font-bold text-2xl">Server Profile</p>
-          <p className="text-sm">Customize how your server appears to others</p>
-          <p className="text-white font-[600] text-sm py-1">Name</p>
-          <input
-            placeholder="Server name"
-            className="bg-black border border-white/50 rounded-lg p-2 text-sm focus:outline-none focus:border-red-500"
-            value={serverName}
-            onChange={(e) => setServerName(e.target.value)}
-          />
-        </div>
-
-        <div
-          className={`${serverName.length < 1}border border-white/50 rounded-lg flex items-center gap-4`}
-        >
-          <button>Cancel</button>
-          <button>Save Changes</button>
-        </div>
+        <ServerProfileView serverData={serverData} />
 
         <div className="flex w-1/4 bg-black text-white p-6 justify-end">
           <XMarkIcon
