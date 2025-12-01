@@ -150,7 +150,7 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
                   onClick={() => setChannel(serverData.channels[index])}
                   className={`flex items-center gap-2 p-1 text-sm rounded-lg  hover:text-red-600 transition-all duration-200 select-none ${channel.id == channelItem.id ? 'bg-white/25 text-white' : 'text-white/50'}`}
                 >
-                  <HashtagIcon className="w-4 h-4 text-orange-500" />
+                  <HashtagIcon className="w-4 h-4 text-red-500" />
                   <p>{channelItem.name}</p>
                 </button>
               ))}
