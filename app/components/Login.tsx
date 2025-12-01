@@ -73,6 +73,7 @@ export default function Login() {
           )}
         </AnimatePresence>
         <input
+          name="email"
           type="email"
           placeholder="email"
           value={email}
@@ -80,6 +81,7 @@ export default function Login() {
           className="p-2 bg-black border-2 border-gray-600 rounded focus:outline-none focus:border-white"
         />
         <input
+          name="password"
           type="password"
           placeholder="password"
           value={password}

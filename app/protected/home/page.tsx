@@ -68,6 +68,7 @@ export default function Home() {
 
   return (
     <motion.div
+      id="home-container"
       className="flex w-full h-screen text-white"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
