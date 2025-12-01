@@ -1,12 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Server } from '../../home/page';
+import { useQueryClient } from '@tanstack/react-query';
+import { updateServerName } from '@/app/lib/server';
 
 interface ServerProfileProps {
   serverData: Server;
+  handleClose: () => void;
 }
 
-export const ServerProfileView = ({ serverData }: ServerProfileProps) => {
+export const ServerProfileView = ({
+  serverData,
+  handleClose,
+}: ServerProfileProps) => {
+  const queryClient = useQueryClient();
+
   const [serverName, setServerName] = useState(serverData.name);
+
+  const handleCancel = () => {
+    setServerName(serverData.name);
+  };
+
+  const handleSaveChanges = () => {
+    try {
+      updateServerName(serverName, serverData.id).then(() => {
+        queryClient.invalidateQueries({ queryKey: ['userServers'] });
+        handleClose();
+      });
+    } catch (error) {
+      console.error('Error updating server name: ', error);
+    }
+  };
+
+  useEffect(() => {
+    if (serverData && serverData.name != serverName) {
+      setServerName(serverData.name);
+    }
+  }, [serverData]);
 
   return (
     <div className="p-6 text-white flex flex-col w-2/4 rounded-lg">
@@ -20,11 +49,15 @@ export const ServerProfileView = ({ serverData }: ServerProfileProps) => {
         onChange={(e) => setServerName(e.target.value)}
       />
       <div
-        className={`${serverName != serverData.name ? '' : 'hidden'} flex w-full justify-center p-4`}
+        className={`${serverName != serverData.name ? 'opacity-100' : 'opacity-0 translate-y-2'} flex w-full justify-center p-4 transition duration-300`}
       >
         <div className="flex justify-evenly w-1/4 p-2 rounded-xl border border-white/60">
-          <button className="font-[600] text-red-500">Cancel</button>
-          <button className="font-[600]">Save Changes</button>
+          <button className="font-[600] text-red-500" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button className="font-[600]" onClick={handleSaveChanges}>
+            Save Changes
+          </button>
         </div>
       </div>
     </div>

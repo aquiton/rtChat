@@ -66,8 +66,6 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
     return unsubscribe;
   }, [serverData.id, channel.id]);
 
-  //TODO UPON MOUNT WE NEED TO GET ALL THE USERS IN THIS SERVER UID and listen to them on the realtime firebase database
-
   useEffect(() => {
     const unsubscribes: (() => void)[] = [];
     serverData.users.forEach((user) => {

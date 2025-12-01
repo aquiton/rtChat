@@ -165,3 +165,21 @@ export const addServer = async (inviteCode: string) => {
     servers: arrayUnion(serverId),
   });
 };
+
+export const updateServerName = async (
+  serverName: string,
+  serverId: string
+) => {
+  if (!serverId) {
+    console.error('Server Id Missing');
+  }
+
+  if (!serverName) {
+    console.error('Server Name Missing');
+  }
+
+  const serverDocRef = doc(db, 'servers', serverId);
+  await updateDoc(serverDocRef, {
+    name: serverName,
+  });
+};

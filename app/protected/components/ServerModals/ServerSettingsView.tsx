@@ -92,7 +92,7 @@ export const ServerSettingsView = ({
           </div>
         </div>
 
-        <ServerProfileView serverData={serverData} />
+        <ServerProfileView serverData={serverData} handleClose={handleClose} />
 
         <div className="flex w-1/4 bg-black text-white p-6 justify-end">
           <XMarkIcon
