@@ -108,7 +108,7 @@ export default function ServerView({ serverData, refetch }: ServerViewProps) {
   }, [activity]);
 
   return (
-    <div className="flex flex-col w-full font-mono">
+    <div id="server-view-container" className="flex flex-col w-full font-mono">
       <div>
         <motion.div
           className=" p-2 text-center"
