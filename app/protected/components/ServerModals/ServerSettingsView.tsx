@@ -2,7 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Server } from '../../home/page';
 import { useUser } from '@/app/lib/auth';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ServerProfileView } from '../ServerSettingViews/ServerProfile';
 
 interface ServerSettingsViewProps {
@@ -24,8 +24,18 @@ export const ServerSettingsView = ({
     : '';
   const serverProfileRef = useRef<HTMLButtonElement>(null);
 
+  const [openDeleteConfirmModal, setOpenDeleteConfirmModal] = useState(false);
+
   const handleClose = () => {
     setOpenServerSettings(false);
+  };
+
+  const handleDeleteModalClose = () => {
+    setOpenDeleteConfirmModal(false);
+  };
+
+  const handleDeleteModalOpen = () => {
+    setOpenDeleteConfirmModal(true);
   };
 
   useEffect(() => {
@@ -77,7 +87,7 @@ export const ServerSettingsView = ({
               <section className="py-1">
                 <div className="px-3 group hover:bg-red-500/10 rounded-md">
                   <button
-                    onClick={handleDelete}
+                    onClick={handleDeleteModalOpen}
                     className="flex w-full items-center justify-between"
                   >
                     <p className="whitespace-nowrap font-[700] text-red-500">
@@ -93,6 +103,35 @@ export const ServerSettingsView = ({
         </div>
 
         <ServerProfileView serverData={serverData} handleClose={handleClose} />
+
+        <Dialog
+          open={openDeleteConfirmModal}
+          onClose={handleDeleteModalClose}
+          className="inset-0 z-50 fixed flex justify-center items-center bg-gray-900/50"
+        >
+          <div className="flex flex-col gap-4 text-white p-4 border border-red-500 rounded-2xl bg-black">
+            <p className="font-[700]">
+              ARE YOU SURE YOU WANT TO{' '}
+              <span className="text-red-500">DELETE: </span>
+            </p>
+            <p className="w-full text-center">{serverData.name}</p>
+
+            <div className="w-full flex justify-between">
+              <button
+                onClick={handleDeleteModalClose}
+                className="transition-scale duration-300 hover:scale-105 hover:text-red-500 px-6 py-1 rounded-full border border-white/50"
+              >
+                NO
+              </button>
+              <button
+                onClick={handleDelete}
+                className="transition-scale duration-300 hover:scale-95 hover:text-red-500 px-6 py-1 rounded-full border border-white/50"
+              >
+                YES
+              </button>
+            </div>
+          </div>
+        </Dialog>
 
         <div className="flex w-1/4 bg-black text-white p-6 justify-end">
           <XMarkIcon
